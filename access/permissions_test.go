@@ -21,19 +21,27 @@ func TestPermissions_Add(t *testing.T) {
 	t.Parallel()
 
 	t.Run("none", func(t *testing.T) {
-		require.Equal(t, PermissionsAll, PermissionsNone.Add(AllPermissions...))
+		require.Equal(t,
+			PermissionsAll,
+			PermissionsNone.Add(AllPermissions...))
 	})
 
 	t.Run("all", func(t *testing.T) {
-		require.Equal(t, PermissionsAll, PermissionsAll.Add(AllPermissions...))
+		require.Equal(t,
+			PermissionsAll,
+			PermissionsAll.Add(AllPermissions...))
 	})
 
 	t.Run("single", func(t *testing.T) {
-		require.Equal(t, Permissions(PermissionCreate), PermissionsNone.Add(PermissionCreate))
+		require.Equal(t,
+			Permissions(PermissionCreate),
+			PermissionsNone.Add(PermissionCreate))
 	})
 
 	t.Run("multiple", func(t *testing.T) {
-		require.Equal(t, Permissions(PermissionCreate|PermissionRead), PermissionsNone.Add(PermissionCreate, PermissionRead))
+		require.Equal(t,
+			Permissions(PermissionCreate|PermissionRead),
+			PermissionsNone.Add(PermissionCreate, PermissionRead))
 	})
 }
 
@@ -41,19 +49,27 @@ func TestPermissions_Remove(t *testing.T) {
 	t.Parallel()
 
 	t.Run("none", func(t *testing.T) {
-		require.Equal(t, PermissionsNone, PermissionsNone.Remove(AllPermissions...))
+		require.Equal(t,
+			PermissionsNone,
+			PermissionsNone.Remove(AllPermissions...))
 	})
 
 	t.Run("all", func(t *testing.T) {
-		require.Equal(t, PermissionsNone, PermissionsAll.Remove(AllPermissions...))
+		require.Equal(t,
+			PermissionsNone,
+			PermissionsAll.Remove(AllPermissions...))
 	})
 
 	t.Run("single", func(t *testing.T) {
-		require.Equal(t, PermissionsNone, Permissions(PermissionCreate).Remove(PermissionCreate))
+		require.Equal(t,
+			Permissions(PermissionRead),
+			Permissions(PermissionCreate|PermissionRead).Remove(PermissionCreate))
 	})
 
 	t.Run("multiple", func(t *testing.T) {
-		require.Equal(t, PermissionsNone, Permissions(PermissionCreate|PermissionRead).Remove(PermissionCreate, PermissionRead))
+		require.Equal(t,
+			Permissions(PermissionWrite),
+			Permissions(PermissionCreate|PermissionRead|PermissionWrite).Remove(PermissionCreate, PermissionRead))
 	})
 }
 
@@ -61,18 +77,26 @@ func TestPermissions_String(t *testing.T) {
 	t.Parallel()
 
 	t.Run("none", func(t *testing.T) {
-		require.Equal(t, "none", PermissionsNone.String())
+		require.Equal(t,
+			"none",
+			PermissionsNone.String())
 	})
 
 	t.Run("all", func(t *testing.T) {
-		require.Equal(t, "all", PermissionsAll.String())
+		require.Equal(t,
+			"all",
+			PermissionsAll.String())
 	})
 
 	t.Run("single", func(t *testing.T) {
-		require.Equal(t, "create", Permissions(PermissionCreate).String())
+		require.Equal(t,
+			"create",
+			Permissions(PermissionCreate).String())
 	})
 
 	t.Run("multiple", func(t *testing.T) {
-		require.Equal(t, "create,read", Permissions(PermissionCreate|PermissionRead).String())
+		require.Equal(t,
+			"create,read",
+			Permissions(PermissionCreate|PermissionRead).String())
 	})
 }
