@@ -1,0 +1,10 @@
+project_name: powermesh-core
+
+release:
+    github:
+        owner: energimind
+        name: powermesh-core
+    draft: false
+
+builds:
+    - skip: true
