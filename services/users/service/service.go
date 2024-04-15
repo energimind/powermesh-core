@@ -24,7 +24,7 @@ type store interface {
 
 // listener defines the external user event listener.
 type listener interface {
-	HandleUserEvent(event users.Event) error
+	HandleUserEvent(ctx context.Context, event users.Event) error
 }
 
 // UserService implements the user service.
@@ -74,7 +74,7 @@ func (s *UserService) CreateUser(
 		return users.User{}, err
 	}
 
-	if err := s.listener.HandleUserEvent(users.Event{
+	if err := s.listener.HandleUserEvent(ctx, users.Event{
 		Type:      users.UserCreated,
 		Actor:     actor,
 		User:      user,
@@ -112,7 +112,7 @@ func (s *UserService) UpdateUser(
 		return users.User{}, err
 	}
 
-	if err := s.listener.HandleUserEvent(users.Event{
+	if err := s.listener.HandleUserEvent(ctx, users.Event{
 		Type:      users.UserUpdated,
 		Actor:     actor,
 		User:      user,
@@ -144,7 +144,7 @@ func (s *UserService) DeleteUser(
 		return err
 	}
 
-	if err := s.listener.HandleUserEvent(users.Event{
+	if err := s.listener.HandleUserEvent(ctx, users.Event{
 		Type:      users.UserDeleted,
 		Actor:     actor,
 		User:      users.User{ID: id},

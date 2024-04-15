@@ -59,7 +59,7 @@ func newTestListener(forcedError bool) *testListener {
 	return &testListener{forcedError: err}
 }
 
-func (l *testListener) HandlePermissionEvent(event permissions.Event) error {
+func (l *testListener) HandlePermissionEvent(_ context.Context, event permissions.Event) error {
 	if l.forcedError != nil {
 		return l.forcedError
 	}

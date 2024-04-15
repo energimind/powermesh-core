@@ -25,7 +25,7 @@ type store interface {
 
 // listener defines the external permissions event listener.
 type listener interface {
-	HandlePermissionEvent(event permissions.Event) error
+	HandlePermissionEvent(ctx context.Context, event permissions.Event) error
 }
 
 // PermissionService implements the permissions service.
@@ -82,7 +82,7 @@ func (s *PermissionService) CreateRoleBinding(
 		RoleBinding: roleBinding,
 	}
 
-	if err := s.listener.HandlePermissionEvent(event); err != nil {
+	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
 		return permissions.RoleBinding{}, err
 	}
 
@@ -122,7 +122,7 @@ func (s *PermissionService) UpdateRoleBinding(
 		RoleBinding: roleBinding,
 	}
 
-	if err := s.listener.HandlePermissionEvent(event); err != nil {
+	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
 		return permissions.RoleBinding{}, err
 	}
 
@@ -157,7 +157,7 @@ func (s *PermissionService) DeleteRoleBinding(
 		RoleBinding: permissions.RoleBinding{ID: id},
 	}
 
-	if err := s.listener.HandlePermissionEvent(event); err != nil {
+	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
 		return err
 	}
 

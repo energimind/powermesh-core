@@ -49,7 +49,7 @@ func newTestListener(forcedError bool) *testListener {
 	return &testListener{forcedError: err}
 }
 
-func (l *testListener) HandleUserEvent(event users.Event) error {
+func (l *testListener) HandleUserEvent(_ context.Context, event users.Event) error {
 	if l.forcedError != nil {
 		return l.forcedError
 	}
