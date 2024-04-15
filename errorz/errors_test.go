@@ -10,7 +10,7 @@ func TestErrors(t *testing.T) {
 	t.Parallel()
 
 	tester := func(t *testing.T, err, exp error) {
-		require.ErrorAs(t, err, &exp)
+		require.IsType(t, exp, err)
 		require.Equal(t, "test:42", err.Error())
 	}
 
@@ -21,4 +21,5 @@ func TestErrors(t *testing.T) {
 	tester(t, NewValidationError("test:%d", 42), ValidationError{})
 	tester(t, NewStoreError("test:%d", 42), StoreError{})
 	tester(t, NewGatewayError("test:%d", 42), GatewayError{})
+	tester(t, NewInternalError("test:%d", 42), InternalError{})
 }

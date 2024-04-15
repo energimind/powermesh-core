@@ -121,3 +121,20 @@ func NewGatewayError(format string, args ...any) GatewayError {
 func (e GatewayError) Error() string {
 	return e.Message
 }
+
+// InternalError is the error returned when an internal error occurs.
+type InternalError struct {
+	Message string
+}
+
+// NewInternalError returns a new InternalError.
+func NewInternalError(format string, args ...any) InternalError {
+	return InternalError{
+		Message: fmt.Sprintf(format, args...),
+	}
+}
+
+// Error returns the error message.
+func (e InternalError) Error() string {
+	return e.Message
+}
