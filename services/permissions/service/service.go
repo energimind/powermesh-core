@@ -34,9 +34,6 @@ type listener interface {
 //
 // We do not wrap the errors returned by the repository because they are already
 // packed as domain errors. Therefore, we disable the wrapcheck linter for these calls.
-//
-// The listener errors are not guaranteed to be domain errors, so we let them through
-// as they are. These will probably be wrapped later as the internal server errors.
 type PermissionService struct {
 	idGen    idGenerator
 	store    store
@@ -83,7 +80,7 @@ func (s *PermissionService) CreateRoleBinding(
 	}
 
 	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return permissions.RoleBinding{}, err
+		return permissions.RoleBinding{}, errorz.NewInternalError("permission event handler failed: %v", err)
 	}
 
 	return roleBinding, nil
@@ -123,7 +120,7 @@ func (s *PermissionService) UpdateRoleBinding(
 	}
 
 	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return permissions.RoleBinding{}, err
+		return permissions.RoleBinding{}, errorz.NewInternalError("permission event handler failed: %v", err)
 	}
 
 	return roleBinding, nil
@@ -158,7 +155,7 @@ func (s *PermissionService) DeleteRoleBinding(
 	}
 
 	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return err
+		return errorz.NewInternalError("permission event handler failed: %v", err)
 	}
 
 	return nil

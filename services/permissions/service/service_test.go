@@ -41,7 +41,7 @@ func TestPermissionService_CreateRoleBinding(t *testing.T) {
 			actor:         adminActor,
 			data:          validRoleBindingData,
 			listenerError: true,
-			wantErr:       errorz.GatewayError{},
+			wantErr:       errorz.InternalError{},
 		},
 		"success": {
 			actor:     adminActor,
@@ -119,7 +119,7 @@ func TestPermissionService_UpdateRoleBinding(t *testing.T) {
 			id:            validRoleBindingID,
 			data:          validRoleBindingData,
 			listenerError: true,
-			wantErr:       errorz.GatewayError{},
+			wantErr:       errorz.InternalError{},
 		},
 		"success": {
 			actor:     adminActor,
@@ -188,7 +188,7 @@ func TestPermissionService_DeleteRoleBinding(t *testing.T) {
 			actor:         adminActor,
 			id:            validRoleBindingID,
 			listenerError: true,
-			wantErr:       errorz.GatewayError{},
+			wantErr:       errorz.InternalError{},
 		},
 		"success": {
 			actor:     adminActor,

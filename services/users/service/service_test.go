@@ -41,7 +41,7 @@ func TestUserService_CreateUser(t *testing.T) {
 			actor:         adminActor,
 			data:          validUserData,
 			listenerError: true,
-			wantErr:       errorz.GatewayError{},
+			wantErr:       errorz.InternalError{},
 		},
 		"success": {
 			actor:     adminActor,
@@ -119,7 +119,7 @@ func TestUserService_UpdateUser(t *testing.T) {
 			id:            validUserID,
 			data:          validUserData,
 			listenerError: true,
-			wantErr:       errorz.GatewayError{},
+			wantErr:       errorz.InternalError{},
 		},
 		"success": {
 			actor:     adminActor,
@@ -187,7 +187,7 @@ func TestUserService_DeleteUser(t *testing.T) {
 			actor:         adminActor,
 			id:            validUserID,
 			listenerError: true,
-			wantErr:       errorz.GatewayError{},
+			wantErr:       errorz.InternalError{},
 		},
 		"success": {
 			actor:     adminActor,

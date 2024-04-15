@@ -33,9 +33,6 @@ type listener interface {
 //
 // We do not wrap the errors returned by the repository because they are already
 // packed as domain errors. Therefore, we disable the wrapcheck linter for these calls.
-//
-// The listener errors are not guaranteed to be domain errors, so we let them through
-// as they are. These will probably be wrapped later as the internal server errors.
 type UserService struct {
 	idGen    idGenerator
 	store    store
@@ -62,7 +59,7 @@ func (s *UserService) CreateUser(
 	data users.UserData,
 ) (users.User, error) {
 	if !canAct(actor) {
-		return users.User{}, errorz.NewAccessDeniedError("actor %s is not allowed to create a user", actor.String())
+		return users.User{}, errorz.NewAccessDeniedError("actor %s cannot create a user", actor.String())
 	}
 
 	if err := validateUserData(data); err != nil {
@@ -80,7 +77,7 @@ func (s *UserService) CreateUser(
 		User:      user,
 		Timestamp: s.now(),
 	}); err != nil {
-		return users.User{}, err
+		return users.User{}, errorz.NewInternalError("user event handler failed: %v", err)
 	}
 
 	return user, nil
@@ -96,7 +93,7 @@ func (s *UserService) UpdateUser(
 	data users.UserData,
 ) (users.User, error) {
 	if !canAct(actor) {
-		return users.User{}, errorz.NewAccessDeniedError("actor %s is not allowed to update a user", actor.String())
+		return users.User{}, errorz.NewAccessDeniedError("actor %s cannot update a user", actor.String())
 	}
 
 	if err := validateID(id); err != nil {
@@ -118,7 +115,7 @@ func (s *UserService) UpdateUser(
 		User:      user,
 		Timestamp: s.now(),
 	}); err != nil {
-		return users.User{}, err
+		return users.User{}, errorz.NewInternalError("user event handler failed: %v", err)
 	}
 
 	return user, nil
@@ -133,7 +130,7 @@ func (s *UserService) DeleteUser(
 	id string,
 ) error {
 	if !canAct(actor) {
-		return errorz.NewAccessDeniedError("actor %s is not allowed to delete a user", actor.String())
+		return errorz.NewAccessDeniedError("actor %s cannot delete a user", actor.String())
 	}
 
 	if err := validateID(id); err != nil {
@@ -150,7 +147,7 @@ func (s *UserService) DeleteUser(
 		User:      users.User{ID: id},
 		Timestamp: s.now(),
 	}); err != nil {
-		return err
+		return errorz.NewInternalError("user event handler failed: %v", err)
 	}
 
 	return nil
@@ -165,7 +162,7 @@ func (s *UserService) GetUserByUsername(
 	username string,
 ) (users.User, error) {
 	if !canAct(actor) {
-		return users.User{}, errorz.NewAccessDeniedError("actor %s is not allowed to get a user by username", actor.String())
+		return users.User{}, errorz.NewAccessDeniedError("actor %s cannot get a user by username", actor.String())
 	}
 
 	if err := validateUsername(username); err != nil {
