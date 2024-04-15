@@ -51,3 +51,14 @@ func (r Role) String() string {
 
 	return "Role(" + strconv.Itoa(int(r)) + ")"
 }
+
+// IsSupportedRole checks if the given role is supported.
+func IsSupportedRole(role Role) bool {
+	for _, r := range AllRoles {
+		if r == role {
+			return true
+		}
+	}
+
+	return false
+}

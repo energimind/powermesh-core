@@ -33,3 +33,21 @@ func TestRole_String(t *testing.T) {
 		require.Equal(t, "Role(100)", r.String())
 	})
 }
+
+func TestIsSupportedRole(t *testing.T) {
+	t.Parallel()
+
+	t.Run("supported", func(t *testing.T) {
+		for _, r := range AllRoles {
+			t.Run(r.String(), func(t *testing.T) {
+				require.True(t, IsSupportedRole(r))
+			})
+		}
+	})
+
+	t.Run("unknown", func(t *testing.T) {
+		r := Role(100)
+
+		require.False(t, IsSupportedRole(r))
+	})
+}
