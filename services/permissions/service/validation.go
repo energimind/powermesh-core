@@ -14,6 +14,14 @@ func validateID(id string) error {
 	return nil
 }
 
+func validateOwnerID(ownerID string) error {
+	if ownerID == "" {
+		return errorz.NewValidationError("ownerID is required")
+	}
+
+	return nil
+}
+
 func validateUserID(userID string) error {
 	if userID == "" {
 		return errorz.NewValidationError("userID is required")
@@ -47,6 +55,10 @@ func validateRole(role access.Role) error {
 }
 
 func validateRoleBindingData(data permissions.RoleBindingData) error {
+	if err := validateOwnerID(data.OwnerID); err != nil {
+		return err
+	}
+
 	if err := validateUserID(data.UserID); err != nil {
 		return err
 	}

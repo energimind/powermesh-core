@@ -256,6 +256,54 @@ func TestPermissionService_GetRoleBinding(t *testing.T) {
 	}
 }
 
+func TestPermissionService_GetRoleBindingsByOwner(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		actor         access.Actor
+		ownerID       string
+		storeError    bool
+		listenerError bool
+		wantErr       error
+	}{
+		"invalid-ownerID": {
+			actor:   adminActor,
+			ownerID: "",
+			wantErr: errorz.ValidationError{},
+		},
+		"store-error": {
+			actor:      adminActor,
+			ownerID:    validOwnerID,
+			storeError: true,
+			wantErr:    errorz.StoreError{},
+		},
+		"success": {
+			actor:   adminActor,
+			ownerID: validOwnerID,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newTestStore(t, test.storeError)
+			tl := newTestListener(test.listenerError)
+
+			svc := NewPermissionService(newTestIDGenerator(), ts, tl)
+
+			rbs, err := svc.GetRoleBindingsByOwner(context.Background(), test.ownerID)
+
+			if test.wantErr != nil {
+				require.Error(t, err)
+				require.IsType(t, test.wantErr, err)
+				require.Empty(t, rbs)
+			} else {
+				require.NoError(t, err)
+				require.NotEmpty(t, rbs)
+			}
+		})
+	}
+}
+
 func TestPermissionService_GetAccessibleObjects(t *testing.T) {
 	t.Parallel()
 

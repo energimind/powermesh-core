@@ -10,6 +10,7 @@ import (
 // Role bindings are used to bind a role to a user and an object.
 type RoleBinding struct {
 	ID         string
+	OwnerID    string
 	UserID     string
 	ObjectID   string
 	ObjectType ObjectType

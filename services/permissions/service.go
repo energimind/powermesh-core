@@ -12,12 +12,14 @@ type RoleBindingService interface {
 	UpdateRoleBinding(ctx context.Context, actor access.Actor, id string, data RoleBindingData) (RoleBinding, error)
 	DeleteRoleBinding(ctx context.Context, actor access.Actor, id string) error
 	GetRoleBinding(ctx context.Context, query RoleBindingQuery) (RoleBinding, error)
+	GetRoleBindingsByOwner(ctx context.Context, ownerID string) ([]RoleBinding, error)
 	GetAccessibleObjects(ctx context.Context, query AccessibleObjectsQuery) ([]string, error)
 }
 
 // RoleBindingData defines the role binding data.
 // It is used to create or update a role binding.
 type RoleBindingData struct {
+	OwnerID    string
 	UserID     string
 	ObjectID   string
 	ObjectType ObjectType

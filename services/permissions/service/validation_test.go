@@ -15,19 +15,49 @@ func Test_validateID(t *testing.T) {
 		id      string
 		wantErr bool
 	}{
-		"valid": {
-			id:      "1",
-			wantErr: false,
-		},
 		"empty": {
 			id:      "",
 			wantErr: true,
+		},
+		"valid": {
+			id:      "1",
+			wantErr: false,
 		},
 	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			err := validateID(test.id)
+
+			if test.wantErr {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
+func Test_validateOwnerID(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		ownerID string
+		wantErr bool
+	}{
+		"empty": {
+			ownerID: "",
+			wantErr: true,
+		},
+		"valid": {
+			ownerID: "1",
+			wantErr: false,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			err := validateOwnerID(test.ownerID)
 
 			if test.wantErr {
 				require.Error(t, err)
@@ -45,13 +75,13 @@ func Test_validateObjectID(t *testing.T) {
 		objectID string
 		wantErr  bool
 	}{
-		"valid": {
-			objectID: "1",
-			wantErr:  false,
-		},
 		"empty": {
 			objectID: "",
 			wantErr:  true,
+		},
+		"valid": {
+			objectID: "1",
+			wantErr:  false,
 		},
 	}
 
@@ -75,13 +105,13 @@ func Test_validateObjectType(t *testing.T) {
 		objectType permissions.ObjectType
 		wantErr    bool
 	}{
-		"valid": {
-			objectType: permissions.ObjectTypeModel,
-			wantErr:    false,
-		},
 		"empty": {
 			objectType: permissions.ObjectType(100),
 			wantErr:    true,
+		},
+		"valid": {
+			objectType: permissions.ObjectTypeModel,
+			wantErr:    false,
 		},
 	}
 
@@ -105,13 +135,13 @@ func Test_validateRole(t *testing.T) {
 		role    access.Role
 		wantErr bool
 	}{
-		"valid": {
-			role:    access.RoleAdmin,
-			wantErr: false,
-		},
 		"empty": {
 			role:    access.Role(100),
 			wantErr: true,
+		},
+		"valid": {
+			role:    access.RoleAdmin,
+			wantErr: false,
 		},
 	}
 
@@ -135,17 +165,19 @@ func Test_validateRoleBindingData(t *testing.T) {
 		data    permissions.RoleBindingData
 		wantErr bool
 	}{
-		"valid": {
+		"invalidOwnerID": {
 			data: permissions.RoleBindingData{
+				OwnerID:    "",
 				UserID:     "1",
 				ObjectID:   "1",
 				ObjectType: permissions.ObjectTypeModel,
 				Role:       access.RoleAdmin,
 			},
-			wantErr: false,
+			wantErr: true,
 		},
 		"invalidUserID": {
 			data: permissions.RoleBindingData{
+				OwnerID:    validOwnerID,
 				UserID:     "",
 				ObjectID:   "1",
 				ObjectType: permissions.ObjectTypeModel,
@@ -155,6 +187,7 @@ func Test_validateRoleBindingData(t *testing.T) {
 		},
 		"invalidObjectID": {
 			data: permissions.RoleBindingData{
+				OwnerID:    validOwnerID,
 				UserID:     "1",
 				ObjectID:   "",
 				ObjectType: permissions.ObjectTypeModel,
@@ -164,6 +197,7 @@ func Test_validateRoleBindingData(t *testing.T) {
 		},
 		"invalidObjectType": {
 			data: permissions.RoleBindingData{
+				OwnerID:    validOwnerID,
 				UserID:     "1",
 				ObjectID:   "1",
 				ObjectType: permissions.ObjectType(100),
@@ -173,12 +207,23 @@ func Test_validateRoleBindingData(t *testing.T) {
 		},
 		"invalidRole": {
 			data: permissions.RoleBindingData{
+				OwnerID:    validOwnerID,
 				UserID:     "1",
 				ObjectID:   "1",
 				ObjectType: permissions.ObjectTypeModel,
 				Role:       access.Role(100),
 			},
 			wantErr: true,
+		},
+		"valid": {
+			data: permissions.RoleBindingData{
+				OwnerID:    validOwnerID,
+				UserID:     "1",
+				ObjectID:   "1",
+				ObjectType: permissions.ObjectTypeModel,
+				Role:       access.RoleAdmin,
+			},
+			wantErr: false,
 		},
 	}
 
@@ -202,14 +247,6 @@ func Test_validateRoleBindingQuery(t *testing.T) {
 		query   permissions.RoleBindingQuery
 		wantErr bool
 	}{
-		"valid": {
-			query: permissions.RoleBindingQuery{
-				UserID:     "1",
-				ObjectID:   "1",
-				ObjectType: permissions.ObjectTypeModel,
-			},
-			wantErr: false,
-		},
 		"invalidUserID": {
 			query: permissions.RoleBindingQuery{
 				UserID:     "",
@@ -234,6 +271,14 @@ func Test_validateRoleBindingQuery(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		"valid": {
+			query: permissions.RoleBindingQuery{
+				UserID:     "1",
+				ObjectID:   "1",
+				ObjectType: permissions.ObjectTypeModel,
+			},
+			wantErr: false,
+		},
 	}
 
 	for name, test := range tests {
@@ -256,13 +301,6 @@ func Test_validateAccessibleObjectsQuery(t *testing.T) {
 		query   permissions.AccessibleObjectsQuery
 		wantErr bool
 	}{
-		"valid": {
-			query: permissions.AccessibleObjectsQuery{
-				UserID:     "1",
-				ObjectType: permissions.ObjectTypeModel,
-			},
-			wantErr: false,
-		},
 		"invalidUserID": {
 			query: permissions.AccessibleObjectsQuery{
 				UserID:     "",
@@ -276,6 +314,13 @@ func Test_validateAccessibleObjectsQuery(t *testing.T) {
 				ObjectType: permissions.ObjectType(100),
 			},
 			wantErr: true,
+		},
+		"valid": {
+			query: permissions.AccessibleObjectsQuery{
+				UserID:     "1",
+				ObjectType: permissions.ObjectTypeModel,
+			},
+			wantErr: false,
 		},
 	}
 

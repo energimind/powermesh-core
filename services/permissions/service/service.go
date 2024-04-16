@@ -20,6 +20,7 @@ type store interface {
 	UpdateRoleBinding(ctx context.Context, id string, data permissions.RoleBindingData) (permissions.RoleBinding, error)
 	DeleteRoleBinding(ctx context.Context, id string) error
 	GetRoleBinding(ctx context.Context, query permissions.RoleBindingQuery) (permissions.RoleBinding, error)
+	GetRoleBindingsByOwner(ctx context.Context, ownerID string) ([]permissions.RoleBinding, error)
 	GetAccessibleObjects(ctx context.Context, query permissions.AccessibleObjectsQuery) ([]string, error)
 }
 
@@ -166,6 +167,25 @@ func (s *PermissionService) GetRoleBinding(
 	}
 
 	return roleBinding, nil
+}
+
+// GetRoleBindingsByOwner implements the permissions.RoleBindingService interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *PermissionService) GetRoleBindingsByOwner(
+	ctx context.Context,
+	ownerID string,
+) ([]permissions.RoleBinding, error) {
+	if err := validateID(ownerID); err != nil {
+		return nil, err
+	}
+
+	roleBindings, err := s.store.GetRoleBindingsByOwner(ctx, ownerID)
+	if err != nil {
+		return nil, err
+	}
+
+	return roleBindings, nil
 }
 
 // GetAccessibleObjects implements the permissions.RoleBindingService interface.

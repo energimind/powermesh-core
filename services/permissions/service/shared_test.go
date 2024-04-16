@@ -14,8 +14,10 @@ import (
 
 var (
 	adminActor           = access.Actor{Role: access.RoleAdmin}
+	validOwnerID         = "userOwner1"
 	validRoleBindingID   = "rb1"
 	validRoleBindingData = permissions.RoleBindingData{
+		OwnerID:    validOwnerID,
 		UserID:     "user1",
 		ObjectID:   "object1",
 		ObjectType: permissions.ObjectTypeModel,
@@ -86,7 +88,11 @@ func newTestStore(t *testing.T, forcedError bool) *testStore {
 	}
 }
 
-func (s *testStore) CreateRoleBinding(_ context.Context, id string, data permissions.RoleBindingData) (permissions.RoleBinding, error) {
+func (s *testStore) CreateRoleBinding(
+	_ context.Context,
+	id string,
+	data permissions.RoleBindingData,
+) (permissions.RoleBinding, error) {
 	s.t.Helper()
 
 	if s.forcedError != nil {
@@ -99,7 +105,11 @@ func (s *testStore) CreateRoleBinding(_ context.Context, id string, data permiss
 	return permissions.RoleBinding{ID: id}, nil
 }
 
-func (s *testStore) UpdateRoleBinding(_ context.Context, id string, data permissions.RoleBindingData) (permissions.RoleBinding, error) {
+func (s *testStore) UpdateRoleBinding(
+	_ context.Context,
+	id string,
+	data permissions.RoleBindingData,
+) (permissions.RoleBinding, error) {
 	s.t.Helper()
 
 	if s.forcedError != nil {
@@ -112,7 +122,10 @@ func (s *testStore) UpdateRoleBinding(_ context.Context, id string, data permiss
 	return permissions.RoleBinding{ID: id}, nil
 }
 
-func (s *testStore) DeleteRoleBinding(_ context.Context, id string) error {
+func (s *testStore) DeleteRoleBinding(
+	_ context.Context,
+	id string,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
@@ -124,7 +137,10 @@ func (s *testStore) DeleteRoleBinding(_ context.Context, id string) error {
 	return nil
 }
 
-func (s *testStore) GetRoleBinding(_ context.Context, query permissions.RoleBindingQuery) (permissions.RoleBinding, error) {
+func (s *testStore) GetRoleBinding(
+	_ context.Context,
+	query permissions.RoleBindingQuery,
+) (permissions.RoleBinding, error) {
 	s.t.Helper()
 
 	if s.forcedError != nil {
@@ -136,7 +152,25 @@ func (s *testStore) GetRoleBinding(_ context.Context, query permissions.RoleBind
 	return permissions.RoleBinding{ID: validRoleBindingID}, nil
 }
 
-func (s *testStore) GetAccessibleObjects(_ context.Context, query permissions.AccessibleObjectsQuery) ([]string, error) {
+func (s *testStore) GetRoleBindingsByOwner(
+	_ context.Context,
+	ownerID string,
+) ([]permissions.RoleBinding, error) {
+	s.t.Helper()
+
+	if s.forcedError != nil {
+		return nil, s.forcedError
+	}
+
+	require.Equal(s.t, validOwnerID, ownerID)
+
+	return []permissions.RoleBinding{{ID: validRoleBindingID}}, nil
+}
+
+func (s *testStore) GetAccessibleObjects(
+	_ context.Context,
+	query permissions.AccessibleObjectsQuery,
+) ([]string, error) {
 	s.t.Helper()
 
 	if s.forcedError != nil {
