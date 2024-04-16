@@ -19,6 +19,7 @@ type store interface {
 	CreateUser(ctx context.Context, id string, data users.UserData) (users.User, error)
 	UpdateUser(ctx context.Context, id string, data users.UserData) (users.User, error)
 	DeleteUser(ctx context.Context, id string) error
+	GetUser(ctx context.Context, id string) (users.User, error)
 	GetUserByUsername(ctx context.Context, username string) (users.User, error)
 }
 
@@ -139,6 +140,54 @@ func (s *UserService) DeleteUser(
 	}
 
 	return nil
+}
+
+// GetUser implements the users.UserService interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *UserService) GetUser(
+	ctx context.Context,
+	id string,
+) (users.User, error) {
+	if err := validateID(id); err != nil {
+		return users.User{}, err
+	}
+
+	user, err := s.store.GetUser(ctx, id)
+	if err != nil {
+		return users.User{}, err
+	}
+
+	return user, nil
+}
+
+// GetUsersByIDs implements the users.UserService interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *UserService) GetUsersByIDs(
+	ctx context.Context,
+	ids []string,
+) ([]users.User, error) {
+	found := make([]users.User, 0, len(ids))
+
+	for _, id := range ids {
+		if err := validateID(id); err != nil {
+			return nil, err
+		}
+
+		user, err := s.store.GetUser(ctx, id)
+		if err != nil {
+			if errorz.IsNotFoundError(err) {
+				continue
+			}
+
+			return nil, err
+		}
+
+		found = append(found, user)
+	}
+
+	return found, nil
 }
 
 // GetUserByUsername implements the users.UserService interface.

@@ -19,6 +19,12 @@ var (
 		Username: "user1",
 		Email:    "user1@somewhere.com",
 	}
+	validUser = users.User{
+		ID:       validUserID,
+		Username: validUserData.Username,
+		Email:    validUserData.Email,
+	}
+	missingUserID = "missing"
 )
 
 type testIDGenerator struct {
@@ -112,6 +118,26 @@ func (s *testStore) DeleteUser(_ context.Context, id string) error {
 	require.NotEmpty(s.t, id)
 
 	return nil
+}
+
+func (s *testStore) GetUser(_ context.Context, id string) (users.User, error) {
+	s.t.Helper()
+
+	if s.forcedError != nil {
+		return users.User{}, s.forcedError
+	}
+
+	require.NotEmpty(s.t, id)
+
+	if id == validUserID {
+		return validUser, nil
+	}
+
+	if id == missingUserID {
+		return users.User{}, errorz.NewNotFoundError("user not found")
+	}
+
+	return users.User{ID: id}, nil
 }
 
 func (s *testStore) GetUserByUsername(_ context.Context, username string) (users.User, error) {

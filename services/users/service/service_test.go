@@ -204,28 +204,113 @@ func TestUserService_DeleteUser(t *testing.T) {
 	}
 }
 
+func TestUserService_GetUser(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		id         string
+		storeError bool
+		wantErr    error
+	}{
+		"invalid-id": {
+			id:      "",
+			wantErr: errorz.ValidationError{},
+		},
+		"store-error": {
+			id:         validUserID,
+			storeError: true,
+			wantErr:    errorz.StoreError{},
+		},
+		"success": {
+			id: validUserID,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newTestStore(t, test.storeError)
+			svc := NewUserService(newTestIDGenerator(), ts, newTestListener(false))
+
+			user, err := svc.GetUser(context.Background(), test.id)
+
+			if test.wantErr != nil {
+				require.Error(t, err)
+				require.IsType(t, test.wantErr, err)
+				require.Empty(t, user)
+			} else {
+				require.NoError(t, err)
+				require.NotEmpty(t, user)
+				require.NotEmpty(t, user.ID)
+			}
+		})
+	}
+}
+
+func TestUserService_GetUsersByIDs(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		ids        []string
+		storeError bool
+		want       []users.User
+		wantErr    error
+	}{
+		"invalid-ids": {
+			ids:     []string{""},
+			wantErr: errorz.ValidationError{},
+		},
+		"store-error": {
+			ids:        []string{validUserID},
+			storeError: true,
+			wantErr:    errorz.StoreError{},
+		},
+		"success": {
+			ids:  []string{validUserID},
+			want: []users.User{validUser},
+		},
+		"success-ignoreMissingUser": {
+			ids:  []string{missingUserID, validUserID},
+			want: []users.User{validUser},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newTestStore(t, test.storeError)
+			svc := NewUserService(newTestIDGenerator(), ts, newTestListener(false))
+
+			found, err := svc.GetUsersByIDs(context.Background(), test.ids)
+
+			if test.wantErr != nil {
+				require.Error(t, err)
+				require.IsType(t, test.wantErr, err)
+				require.Empty(t, found)
+			} else {
+				require.NoError(t, err)
+				require.Equal(t, test.want, found)
+			}
+		})
+	}
+}
+
 func TestUserService_GetUserByUsername(t *testing.T) {
 	t.Parallel()
 
 	tests := map[string]struct {
-		actor      access.Actor
 		username   string
 		storeError bool
 		wantErr    error
 	}{
 		"invalid-username": {
-			actor:    adminActor,
 			username: "",
 			wantErr:  errorz.ValidationError{},
 		},
 		"store-error": {
-			actor:      adminActor,
 			username:   "user1",
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
 		"success": {
-			actor:    adminActor,
 			username: "user1",
 		},
 	}
