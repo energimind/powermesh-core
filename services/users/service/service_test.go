@@ -21,11 +21,6 @@ func TestUserService_CreateUser(t *testing.T) {
 		wantEvent     users.EventType
 		wantErr       error
 	}{
-		"access-denied": {
-			actor:   guestActor,
-			data:    validUserData,
-			wantErr: errorz.AccessDeniedError{},
-		},
 		"invalid-userData": {
 			actor:   adminActor,
 			data:    users.UserData{},
@@ -89,12 +84,6 @@ func TestUserService_UpdateUser(t *testing.T) {
 		wantEvent     users.EventType
 		wantErr       error
 	}{
-		"access-denied": {
-			actor:   guestActor,
-			id:      validUserID,
-			data:    validUserData,
-			wantErr: errorz.AccessDeniedError{},
-		},
 		"invalid-id": {
 			actor:   adminActor,
 			id:      "",
@@ -167,11 +156,6 @@ func TestUserService_DeleteUser(t *testing.T) {
 		wantEvent     users.EventType
 		wantErr       error
 	}{
-		"access-denied": {
-			actor:   guestActor,
-			id:      validUserID,
-			wantErr: errorz.AccessDeniedError{},
-		},
 		"invalid-id": {
 			actor:   adminActor,
 			id:      "",
@@ -229,11 +213,6 @@ func TestUserService_GetUserByUsername(t *testing.T) {
 		storeError bool
 		wantErr    error
 	}{
-		"access-denied": {
-			actor:    guestActor,
-			username: "user1",
-			wantErr:  errorz.AccessDeniedError{},
-		},
 		"invalid-username": {
 			actor:    adminActor,
 			username: "",

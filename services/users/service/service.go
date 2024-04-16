@@ -58,10 +58,6 @@ func (s *UserService) CreateUser(
 	actor access.Actor,
 	data users.UserData,
 ) (users.User, error) {
-	if !canAct(actor) {
-		return users.User{}, errorz.NewAccessDeniedError("actor %s cannot create a user", actor.String())
-	}
-
 	if err := validateUserData(data); err != nil {
 		return users.User{}, err
 	}
@@ -92,10 +88,6 @@ func (s *UserService) UpdateUser(
 	id string,
 	data users.UserData,
 ) (users.User, error) {
-	if !canAct(actor) {
-		return users.User{}, errorz.NewAccessDeniedError("actor %s cannot update a user", actor.String())
-	}
-
 	if err := validateID(id); err != nil {
 		return users.User{}, err
 	}
@@ -129,10 +121,6 @@ func (s *UserService) DeleteUser(
 	actor access.Actor,
 	id string,
 ) error {
-	if !canAct(actor) {
-		return errorz.NewAccessDeniedError("actor %s cannot delete a user", actor.String())
-	}
-
 	if err := validateID(id); err != nil {
 		return err
 	}
@@ -161,10 +149,6 @@ func (s *UserService) GetUserByUsername(
 	actor access.Actor,
 	username string,
 ) (users.User, error) {
-	if !canAct(actor) {
-		return users.User{}, errorz.NewAccessDeniedError("actor %s cannot get a user by username", actor.String())
-	}
-
 	if err := validateUsername(username); err != nil {
 		return users.User{}, err
 	}

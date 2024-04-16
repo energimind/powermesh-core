@@ -21,11 +21,6 @@ func TestPermissionService_CreateRoleBinding(t *testing.T) {
 		wantEvent     permissions.EventType
 		wantErr       error
 	}{
-		"access-denied": {
-			actor:   guestActor,
-			data:    validRoleBindingData,
-			wantErr: errorz.AccessDeniedError{},
-		},
 		"invalid-roleBindingData": {
 			actor:   adminActor,
 			data:    permissions.RoleBindingData{},
@@ -90,11 +85,6 @@ func TestPermissionService_UpdateRoleBinding(t *testing.T) {
 		wantEvent     permissions.EventType
 		wantErr       error
 	}{
-		"access-denied": {
-			actor:   guestActor,
-			data:    validRoleBindingData,
-			wantErr: errorz.AccessDeniedError{},
-		},
 		"invalid-id": {
 			actor:   adminActor,
 			id:      "",
@@ -168,11 +158,6 @@ func TestPermissionService_DeleteRoleBinding(t *testing.T) {
 		wantEvent     permissions.EventType
 		wantErr       error
 	}{
-		"access-denied": {
-			actor:   guestActor,
-			id:      validRoleBindingID,
-			wantErr: errorz.AccessDeniedError{},
-		},
 		"invalid-id": {
 			actor:   adminActor,
 			id:      "",
@@ -232,11 +217,6 @@ func TestPermissionService_GetRoleBinding(t *testing.T) {
 		listenerError bool
 		wantErr       error
 	}{
-		"access-denied": {
-			actor:   guestActor,
-			query:   validRoleBindingQuery,
-			wantErr: errorz.AccessDeniedError{},
-		},
 		"invalid-query": {
 			actor:   adminActor,
 			query:   permissions.RoleBindingQuery{},
@@ -286,11 +266,6 @@ func TestPermissionService_GetAccessibleObjects(t *testing.T) {
 		listenerError bool
 		wantErr       error
 	}{
-		"access-denied": {
-			actor:   guestActor,
-			query:   validAccessibleObjectsQuery,
-			wantErr: errorz.AccessDeniedError{},
-		},
 		"invalid-query": {
 			actor:   adminActor,
 			query:   permissions.AccessibleObjectsQuery{},

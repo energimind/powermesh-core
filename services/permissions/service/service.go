@@ -59,10 +59,6 @@ func (s *PermissionService) CreateRoleBinding(
 	actor access.Actor,
 	data permissions.RoleBindingData,
 ) (permissions.RoleBinding, error) {
-	if !canAct(actor) {
-		return permissions.RoleBinding{}, errorz.NewAccessDeniedError("actor %s cannot create role binding", actor)
-	}
-
 	if err := validateRoleBindingData(data); err != nil {
 		return permissions.RoleBinding{}, err
 	}
@@ -95,10 +91,6 @@ func (s *PermissionService) UpdateRoleBinding(
 	id string,
 	data permissions.RoleBindingData,
 ) (permissions.RoleBinding, error) {
-	if !canAct(actor) {
-		return permissions.RoleBinding{}, errorz.NewAccessDeniedError("actor %s cannot update role binding", actor)
-	}
-
 	if err := validateID(id); err != nil {
 		return permissions.RoleBinding{}, err
 	}
@@ -134,10 +126,6 @@ func (s *PermissionService) DeleteRoleBinding(
 	actor access.Actor,
 	id string,
 ) error {
-	if !canAct(actor) {
-		return errorz.NewAccessDeniedError("actor %s cannot delete role binding", actor)
-	}
-
 	if err := validateID(id); err != nil {
 		return err
 	}
@@ -169,10 +157,6 @@ func (s *PermissionService) GetRoleBinding(
 	actor access.Actor,
 	query permissions.RoleBindingQuery,
 ) (permissions.RoleBinding, error) {
-	if !canAct(actor) {
-		return permissions.RoleBinding{}, errorz.NewAccessDeniedError("actor %s cannot get role binding", actor)
-	}
-
 	if err := validateRoleBindingQuery(query); err != nil {
 		return permissions.RoleBinding{}, err
 	}
@@ -193,10 +177,6 @@ func (s *PermissionService) GetAccessibleObjects(
 	actor access.Actor,
 	query permissions.AccessibleObjectsQuery,
 ) ([]string, error) {
-	if !canAct(actor) {
-		return nil, errorz.NewAccessDeniedError("actor %s cannot get accessible objects", actor)
-	}
-
 	if err := validateAccessibleObjectsQuery(query); err != nil {
 		return nil, err
 	}
