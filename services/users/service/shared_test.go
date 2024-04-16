@@ -14,7 +14,6 @@ import (
 
 var (
 	adminActor    = access.Actor{Role: access.RoleAdmin}
-	guestActor    = access.Actor{Role: access.RoleGuest}
 	validUserID   = "1"
 	validUserData = users.UserData{
 		Username: "user1",

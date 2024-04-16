@@ -235,7 +235,7 @@ func TestUserService_GetUserByUsername(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			svc := NewUserService(newTestIDGenerator(), ts, newTestListener(false))
 
-			user, err := svc.GetUserByUsername(context.Background(), test.actor, test.username)
+			user, err := svc.GetUserByUsername(context.Background(), test.username)
 
 			if test.wantErr != nil {
 				require.Error(t, err)

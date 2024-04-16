@@ -241,7 +241,7 @@ func TestPermissionService_GetRoleBinding(t *testing.T) {
 
 			svc := NewPermissionService(newTestIDGenerator(), ts, tl)
 
-			rb, err := svc.GetRoleBinding(context.Background(), test.actor, test.query)
+			rb, err := svc.GetRoleBinding(context.Background(), test.query)
 
 			if test.wantErr != nil {
 				require.Error(t, err)
@@ -290,7 +290,7 @@ func TestPermissionService_GetAccessibleObjects(t *testing.T) {
 
 			svc := NewPermissionService(newTestIDGenerator(), ts, tl)
 
-			objects, err := svc.GetAccessibleObjects(context.Background(), test.actor, test.query)
+			objects, err := svc.GetAccessibleObjects(context.Background(), test.query)
 
 			if test.wantErr != nil {
 				require.Error(t, err)

@@ -11,8 +11,8 @@ type RoleBindingService interface {
 	CreateRoleBinding(ctx context.Context, actor access.Actor, data RoleBindingData) (RoleBinding, error)
 	UpdateRoleBinding(ctx context.Context, actor access.Actor, id string, data RoleBindingData) (RoleBinding, error)
 	DeleteRoleBinding(ctx context.Context, actor access.Actor, id string) error
-	GetRoleBinding(ctx context.Context, actor access.Actor, query RoleBindingQuery) (RoleBinding, error)
-	GetAccessibleObjects(ctx context.Context, actor access.Actor, query AccessibleObjectsQuery) ([]string, error)
+	GetRoleBinding(ctx context.Context, query RoleBindingQuery) (RoleBinding, error)
+	GetAccessibleObjects(ctx context.Context, query AccessibleObjectsQuery) ([]string, error)
 }
 
 // RoleBindingData defines the role binding data.

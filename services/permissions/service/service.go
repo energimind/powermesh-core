@@ -154,7 +154,6 @@ func (s *PermissionService) DeleteRoleBinding(
 //nolint:wrapcheck // see comment in the header
 func (s *PermissionService) GetRoleBinding(
 	ctx context.Context,
-	actor access.Actor,
 	query permissions.RoleBindingQuery,
 ) (permissions.RoleBinding, error) {
 	if err := validateRoleBindingQuery(query); err != nil {
@@ -174,7 +173,6 @@ func (s *PermissionService) GetRoleBinding(
 //nolint:wrapcheck // see comment in the header
 func (s *PermissionService) GetAccessibleObjects(
 	ctx context.Context,
-	actor access.Actor,
 	query permissions.AccessibleObjectsQuery,
 ) ([]string, error) {
 	if err := validateAccessibleObjectsQuery(query); err != nil {

@@ -11,7 +11,7 @@ type UserService interface {
 	CreateUser(ctx context.Context, actor access.Actor, data UserData) (User, error)
 	UpdateUser(ctx context.Context, actor access.Actor, id string, data UserData) (User, error)
 	DeleteUser(ctx context.Context, actor access.Actor, id string) error
-	GetUserByUsername(ctx context.Context, actor access.Actor, username string) (User, error)
+	GetUserByUsername(ctx context.Context, username string) (User, error)
 }
 
 // UserData defines the user data. It is used to create or update a user.

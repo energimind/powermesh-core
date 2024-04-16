@@ -14,7 +14,6 @@ import (
 
 var (
 	adminActor           = access.Actor{Role: access.RoleAdmin}
-	guestActor           = access.Actor{Role: access.RoleGuest}
 	validRoleBindingID   = "rb1"
 	validRoleBindingData = permissions.RoleBindingData{
 		UserID:     "user1",

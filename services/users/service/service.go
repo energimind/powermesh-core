@@ -146,7 +146,6 @@ func (s *UserService) DeleteUser(
 //nolint:wrapcheck // see comment in the header
 func (s *UserService) GetUserByUsername(
 	ctx context.Context,
-	actor access.Actor,
 	username string,
 ) (users.User, error) {
 	if err := validateUsername(username); err != nil {
