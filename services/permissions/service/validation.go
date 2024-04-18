@@ -30,17 +30,17 @@ func validateUserID(userID string) error {
 	return nil
 }
 
-func validateObjectID(objectID string) error {
-	if objectID == "" {
-		return errorz.NewValidationError("objectID is required")
+func validateResourceID(resourceID string) error {
+	if resourceID == "" {
+		return errorz.NewValidationError("resourceID is required")
 	}
 
 	return nil
 }
 
-func validateObjectType(objectType permissions.ObjectType) error {
-	if !permissions.IsSupportedObjectType(objectType) {
-		return errorz.NewValidationError("objectType %s is not supported", objectType)
+func validateResourceType(resourceType permissions.ResourceType) error {
+	if !permissions.IsSupportedResourceType(resourceType) {
+		return errorz.NewValidationError("resourceType %s is not supported", resourceType)
 	}
 
 	return nil
@@ -63,11 +63,11 @@ func validateRoleBindingData(data permissions.RoleBindingData) error {
 		return err
 	}
 
-	if err := validateObjectID(data.ObjectID); err != nil {
+	if err := validateResourceID(data.ResourceID); err != nil {
 		return err
 	}
 
-	if err := validateObjectType(data.ObjectType); err != nil {
+	if err := validateResourceType(data.ResourceType); err != nil {
 		return err
 	}
 
@@ -83,23 +83,23 @@ func validateRoleBindingQuery(query permissions.RoleBindingQuery) error {
 		return err
 	}
 
-	if err := validateObjectID(query.ObjectID); err != nil {
+	if err := validateResourceID(query.ResourceID); err != nil {
 		return err
 	}
 
-	if err := validateObjectType(query.ObjectType); err != nil {
+	if err := validateResourceType(query.ResourceType); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func validateAccessibleObjectsQuery(query permissions.AccessibleObjectsQuery) error {
+func validateAccessibleResourcesQuery(query permissions.AccessibleResourcesQuery) error {
 	if err := validateUserID(query.UserID); err != nil {
 		return err
 	}
 
-	if err := validateObjectType(query.ObjectType); err != nil {
+	if err := validateResourceType(query.ResourceType); err != nil {
 		return err
 	}
 

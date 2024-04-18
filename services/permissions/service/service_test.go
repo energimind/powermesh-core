@@ -304,30 +304,30 @@ func TestPermissionService_GetRoleBindingsByOwner(t *testing.T) {
 	}
 }
 
-func TestPermissionService_GetAccessibleObjects(t *testing.T) {
+func TestPermissionService_GetAccessibleResources(t *testing.T) {
 	t.Parallel()
 
 	tests := map[string]struct {
 		actor         access.Actor
-		query         permissions.AccessibleObjectsQuery
+		query         permissions.AccessibleResourcesQuery
 		storeError    bool
 		listenerError bool
 		wantErr       error
 	}{
 		"invalid-query": {
 			actor:   adminActor,
-			query:   permissions.AccessibleObjectsQuery{},
+			query:   permissions.AccessibleResourcesQuery{},
 			wantErr: errorz.ValidationError{},
 		},
 		"store-error": {
 			actor:      adminActor,
-			query:      validAccessibleObjectsQuery,
+			query:      validAccessibleResourcesQuery,
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
 		"success": {
 			actor: adminActor,
-			query: validAccessibleObjectsQuery,
+			query: validAccessibleResourcesQuery,
 		},
 	}
 
@@ -338,15 +338,15 @@ func TestPermissionService_GetAccessibleObjects(t *testing.T) {
 
 			svc := NewPermissionService(newTestIDGenerator(), ts, tl)
 
-			objects, err := svc.GetAccessibleObjects(context.Background(), test.query)
+			resources, err := svc.GetAccessibleResources(context.Background(), test.query)
 
 			if test.wantErr != nil {
 				require.Error(t, err)
 				require.IsType(t, test.wantErr, err)
-				require.Nil(t, objects)
+				require.Nil(t, resources)
 			} else {
 				require.NoError(t, err)
-				require.NotEmpty(t, objects)
+				require.NotEmpty(t, resources)
 			}
 		})
 	}

@@ -21,7 +21,7 @@ type store interface {
 	DeleteRoleBinding(ctx context.Context, id string) error
 	GetRoleBinding(ctx context.Context, query permissions.RoleBindingQuery) (permissions.RoleBinding, error)
 	GetRoleBindingsByOwner(ctx context.Context, ownerID string) ([]permissions.RoleBinding, error)
-	GetAccessibleObjects(ctx context.Context, query permissions.AccessibleObjectsQuery) ([]string, error)
+	GetAccessibleResources(ctx context.Context, query permissions.AccessibleResourcesQuery) ([]string, error)
 }
 
 // listener defines the external permissions event listener.
@@ -188,21 +188,21 @@ func (s *PermissionService) GetRoleBindingsByOwner(
 	return roleBindings, nil
 }
 
-// GetAccessibleObjects implements the permissions.RoleBindingService interface.
+// GetAccessibleResources implements the permissions.RoleBindingService interface.
 //
 //nolint:wrapcheck // see comment in the header
-func (s *PermissionService) GetAccessibleObjects(
+func (s *PermissionService) GetAccessibleResources(
 	ctx context.Context,
-	query permissions.AccessibleObjectsQuery,
+	query permissions.AccessibleResourcesQuery,
 ) ([]string, error) {
-	if err := validateAccessibleObjectsQuery(query); err != nil {
+	if err := validateAccessibleResourcesQuery(query); err != nil {
 		return nil, err
 	}
 
-	objects, err := s.store.GetAccessibleObjects(ctx, query)
+	resources, err := s.store.GetAccessibleResources(ctx, query)
 	if err != nil {
 		return nil, err
 	}
 
-	return objects, nil
+	return resources, nil
 }

@@ -4,7 +4,7 @@ import (
 	"strconv"
 )
 
-// Permission represents a permission to act on an object.
+// Permission represents a permission to act on a resource.
 type Permission int
 
 // Permission enumeration for access control.

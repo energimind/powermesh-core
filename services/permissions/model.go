@@ -7,43 +7,43 @@ import (
 )
 
 // RoleBinding represents a role binding.
-// Role bindings are used to bind a role to a user and an object.
+// Role bindings are used to bind a role to a user and a resource.
 type RoleBinding struct {
-	ID         string
-	OwnerID    string
-	UserID     string
-	ObjectID   string
-	ObjectType ObjectType
-	Role       access.Role
+	ID           string
+	OwnerID      string
+	UserID       string
+	ResourceID   string
+	ResourceType ResourceType
+	Role         access.Role
 }
 
-// ObjectType represents the type of object.
-type ObjectType int
+// ResourceType represents the type of resource.
+type ResourceType int
 
-// ObjectTypeModel is the model object type.
-const ObjectTypeModel ObjectType = iota
+// ResourceTypeModel is the model resource type.
+const ResourceTypeModel ResourceType = iota
 
-// AllObjectTypes is a list of all object types. Used for testing purposes to validate that all
+// AllResourceTypes is a list of all resource types. Used for testing purposes to validate that all
 // enum values are covered.
 //
 //nolint:gochecknoglobals
-var AllObjectTypes = []ObjectType{
-	ObjectTypeModel,
+var AllResourceTypes = []ResourceType{
+	ResourceTypeModel,
 }
 
-// String returns the string representation of the object type.
-func (o ObjectType) String() string {
-	if o == ObjectTypeModel {
+// String returns the string representation of the resource type.
+func (o ResourceType) String() string {
+	if o == ResourceTypeModel {
 		return "model"
 	}
 
-	return "ObjectType(" + strconv.Itoa(int(o)) + ")"
+	return "ResourceType(" + strconv.Itoa(int(o)) + ")"
 }
 
-// IsSupportedObjectType checks if the given object type is supported.
-func IsSupportedObjectType(objectType ObjectType) bool {
-	for _, ot := range AllObjectTypes {
-		if ot == objectType {
+// IsSupportedResourceType checks if the given resource type is supported.
+func IsSupportedResourceType(resourceType ResourceType) bool {
+	for _, rt := range AllResourceTypes {
+		if rt == resourceType {
 			return true
 		}
 	}

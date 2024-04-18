@@ -13,30 +13,30 @@ type RoleBindingService interface {
 	DeleteRoleBinding(ctx context.Context, actor access.Actor, id string) error
 	GetRoleBinding(ctx context.Context, query RoleBindingQuery) (RoleBinding, error)
 	GetRoleBindingsByOwner(ctx context.Context, ownerID string) ([]RoleBinding, error)
-	GetAccessibleObjects(ctx context.Context, query AccessibleObjectsQuery) ([]string, error)
+	GetAccessibleResources(ctx context.Context, query AccessibleResourcesQuery) ([]string, error)
 }
 
 // RoleBindingData defines the role binding data.
 // It is used to create or update a role binding.
 type RoleBindingData struct {
-	OwnerID    string
-	UserID     string
-	ObjectID   string
-	ObjectType ObjectType
-	Role       access.Role
+	OwnerID      string
+	UserID       string
+	ResourceID   string
+	ResourceType ResourceType
+	Role         access.Role
 }
 
 // RoleBindingQuery defines the role binding query.
-// It is used to get a role binding for a user and an object.
+// It is used to get a role binding for a user and a resource.
 type RoleBindingQuery struct {
-	UserID     string
-	ObjectID   string
-	ObjectType ObjectType
+	UserID       string
+	ResourceID   string
+	ResourceType ResourceType
 }
 
-// AccessibleObjectsQuery defines the accessible objects query.
-// It is used to get all accessible objects of the given type for a user.
-type AccessibleObjectsQuery struct {
-	UserID     string
-	ObjectType ObjectType
+// AccessibleResourcesQuery defines the accessible resources query.
+// It is used to get all accessible resources of the given type for a user.
+type AccessibleResourcesQuery struct {
+	UserID       string
+	ResourceType ResourceType
 }

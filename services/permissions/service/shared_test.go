@@ -17,19 +17,19 @@ var (
 	validOwnerID         = "userOwner1"
 	validRoleBindingID   = "rb1"
 	validRoleBindingData = permissions.RoleBindingData{
-		OwnerID:    validOwnerID,
-		UserID:     "user1",
-		ObjectID:   "object1",
-		ObjectType: permissions.ObjectTypeModel,
-		Role:       access.RoleAdmin,
+		OwnerID:      validOwnerID,
+		UserID:       "user1",
+		ResourceID:   "resource1",
+		ResourceType: permissions.ResourceTypeModel,
+		Role:         access.RoleAdmin,
 	}
 	validRoleBindingQuery = permissions.RoleBindingQuery{
-		UserID:   "user1",
-		ObjectID: "object1",
-	}
-	validAccessibleObjectsQuery = permissions.AccessibleObjectsQuery{
 		UserID:     "user1",
-		ObjectType: permissions.ObjectTypeModel,
+		ResourceID: "resource1",
+	}
+	validAccessibleResourcesQuery = permissions.AccessibleResourcesQuery{
+		UserID:       "user1",
+		ResourceType: permissions.ResourceTypeModel,
 	}
 )
 
@@ -167,9 +167,9 @@ func (s *testStore) GetRoleBindingsByOwner(
 	return []permissions.RoleBinding{{ID: validRoleBindingID}}, nil
 }
 
-func (s *testStore) GetAccessibleObjects(
+func (s *testStore) GetAccessibleResources(
 	_ context.Context,
-	query permissions.AccessibleObjectsQuery,
+	query permissions.AccessibleResourcesQuery,
 ) ([]string, error) {
 	s.t.Helper()
 
@@ -177,9 +177,9 @@ func (s *testStore) GetAccessibleObjects(
 		return nil, s.forcedError
 	}
 
-	require.Equal(s.t, validAccessibleObjectsQuery, query)
+	require.Equal(s.t, validAccessibleResourcesQuery, query)
 
-	return []string{"object1"}, nil
+	return []string{"resource1"}, nil
 }
 
 func requireEventFired(t *testing.T, wantEvent permissions.EventType, listener *testListener) {
