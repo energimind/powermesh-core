@@ -20,7 +20,7 @@ type modelStore interface {
 
 // modelListener defines the external model event listener.
 type modelListener interface {
-	HandleModelEvent(ctx context.Context, event models.Event) error
+	HandleModelEvent(ctx context.Context, event models.ModelEvent) error
 }
 
 // ModelService implements the model service.
@@ -63,7 +63,7 @@ func (s *ModelService) CreateModel(
 		return models.Model{}, err
 	}
 
-	if err := s.listener.HandleModelEvent(ctx, models.Event{
+	if err := s.listener.HandleModelEvent(ctx, models.ModelEvent{
 		Type:      models.ModelCreated,
 		Actor:     actor,
 		Model:     model,
@@ -97,7 +97,7 @@ func (s *ModelService) UpdateModel(
 		return models.Model{}, err
 	}
 
-	if err := s.listener.HandleModelEvent(ctx, models.Event{
+	if err := s.listener.HandleModelEvent(ctx, models.ModelEvent{
 		Type:      models.ModelUpdated,
 		Actor:     actor,
 		Model:     model,
@@ -125,7 +125,7 @@ func (s *ModelService) DeleteModel(
 		return err
 	}
 
-	if err := s.listener.HandleModelEvent(ctx, models.Event{
+	if err := s.listener.HandleModelEvent(ctx, models.ModelEvent{
 		Type:      models.ModelDeleted,
 		Actor:     actor,
 		Model:     models.Model{ID: id},

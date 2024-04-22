@@ -18,7 +18,7 @@ func TestModelService_CreateModel(t *testing.T) {
 		data          models.ModelData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.EventType
+		wantEvent     models.ModelEventType
 		wantErr       error
 	}{
 		"invalid-modelData": {
@@ -82,7 +82,7 @@ func TestModelService_UpdateModel(t *testing.T) {
 		data          models.ModelData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.EventType
+		wantEvent     models.ModelEventType
 		wantErr       error
 	}{
 		"invalid-id": {
@@ -155,7 +155,7 @@ func TestModelService_DeleteModel(t *testing.T) {
 		id            string
 		storeError    bool
 		listenerError bool
-		wantEvent     models.EventType
+		wantEvent     models.ModelEventType
 		wantErr       error
 	}{
 		"invalid-id": {

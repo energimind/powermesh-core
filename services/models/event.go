@@ -6,19 +6,19 @@ import (
 	"github.com/energimind/powermesh-core/access"
 )
 
-// EventType is the type of event that occurred.
-type EventType string
+// ModelEventType is the type of event that occurred.
+type ModelEventType string
 
-// Event types.
+// Model event types.
 const (
-	ModelCreated EventType = "model.created"
-	ModelUpdated EventType = "model.updated"
-	ModelDeleted EventType = "model.deleted"
+	ModelCreated ModelEventType = "model.created"
+	ModelUpdated ModelEventType = "model.updated"
+	ModelDeleted ModelEventType = "model.deleted"
 )
 
-// Event models an event that occurs in the model service.
-type Event struct {
-	Type      EventType
+// ModelEvent models an event that occurs in the model service.
+type ModelEvent struct {
+	Type      ModelEventType
 	Actor     access.Actor
 	Model     Model
 	Timestamp time.Time

@@ -12,7 +12,7 @@ import (
 
 type testModelListener struct {
 	forceError error
-	eventFired models.Event
+	eventFired models.ModelEvent
 }
 
 func newTestModelListener(forcedError bool) *testModelListener {
@@ -27,7 +27,7 @@ func newTestModelListener(forcedError bool) *testModelListener {
 	}
 }
 
-func (l *testModelListener) HandleModelEvent(_ context.Context, event models.Event) error {
+func (l *testModelListener) HandleModelEvent(_ context.Context, event models.ModelEvent) error {
 	if l.forceError != nil {
 		return l.forceError
 	}
@@ -150,7 +150,7 @@ func (s *testModelStore) GetModelsByIDs(
 	return found, nil
 }
 
-func requireModelEventFired(t *testing.T, wantEvent models.EventType, listener *testModelListener) {
+func requireModelEventFired(t *testing.T, wantEvent models.ModelEventType, listener *testModelListener) {
 	t.Helper()
 
 	require.NotEmpty(t, listener.eventFired)
