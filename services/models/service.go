@@ -38,7 +38,7 @@ type meshOperations interface {
 
 // nodeOperations defines the operations on nodes.
 type nodeOperations interface {
-	CreateNode(ctx context.Context, actor access.Actor, modelID, nodeID string, data NodeData) (Node, error)
+	CreateNode(ctx context.Context, actor access.Actor, modelID string, data NodeData) (Node, error)
 	UpdateNode(ctx context.Context, actor access.Actor, modelID, nodeID string, data NodeData) (Node, error)
 	DeleteNode(ctx context.Context, actor access.Actor, modelID, nodeID string) error
 	GetNode(ctx context.Context, modelID, nodeID string) (Node, error)
@@ -46,7 +46,7 @@ type nodeOperations interface {
 
 // relationOperations defines the operations on relations.
 type relationOperations interface {
-	CreateRelation(ctx context.Context, actor access.Actor, modelID, relationID string, data RelationData) (Relation, error)
+	CreateRelation(ctx context.Context, actor access.Actor, modelID, data RelationData) (Relation, error)
 	UpdateRelation(ctx context.Context, actor access.Actor, modelID, relationID string, data RelationData) (Relation, error)
 	DeleteRelation(ctx context.Context, actor access.Actor, modelID, relationID string) error
 	GetRelation(ctx context.Context, modelID, relationID string) (Relation, error)

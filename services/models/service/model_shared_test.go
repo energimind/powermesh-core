@@ -75,36 +75,34 @@ func newTestModelStore(t *testing.T, forcedError bool) *testModelStore {
 
 func (s *testModelStore) CreateModel(
 	_ context.Context,
-	id string,
-	data models.ModelData,
-) (models.Model, error) {
+	model models.Model,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return models.Model{}, s.forcedError
+		return s.forcedError
 	}
 
-	require.NotEmpty(s.t, id)
-	require.Equal(s.t, validModelData, data)
+	require.NotEmpty(s.t, model.ID)
+	require.Equal(s.t, validModel, model)
 
-	return models.Model{ID: id}, nil
+	return nil
 }
 
 func (s *testModelStore) UpdateModel(
 	_ context.Context,
-	id string,
-	data models.ModelData,
-) (models.Model, error) {
+	model models.Model,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return models.Model{}, s.forcedError
+		return s.forcedError
 	}
 
-	require.NotEmpty(s.t, id)
-	require.Equal(s.t, validModelData, data)
+	require.NotEmpty(s.t, model.ID)
+	require.Equal(s.t, validModel, model)
 
-	return models.Model{ID: id}, nil
+	return nil
 }
 
 func (s *testModelStore) DeleteModel(

@@ -16,8 +16,8 @@ type idGenerator interface {
 
 // store defines the external user store.
 type store interface {
-	CreateUser(ctx context.Context, id string, data users.UserData) (users.User, error)
-	UpdateUser(ctx context.Context, id string, data users.UserData) (users.User, error)
+	CreateUser(ctx context.Context, user users.User) error
+	UpdateUser(ctx context.Context, user users.User) error
 	DeleteUser(ctx context.Context, id string) error
 	GetUser(ctx context.Context, id string) (users.User, error)
 	GetUsersByIDs(ctx context.Context, ids []string) ([]users.User, error)
@@ -64,8 +64,9 @@ func (s *UserService) CreateUser(
 		return users.User{}, err
 	}
 
-	user, err := s.store.CreateUser(ctx, s.idGen.GenerateID(), data)
-	if err != nil {
+	user := userFromData(s.idGen.GenerateID(), data)
+
+	if err := s.store.CreateUser(ctx, user); err != nil {
 		return users.User{}, err
 	}
 
@@ -98,8 +99,9 @@ func (s *UserService) UpdateUser(
 		return users.User{}, err
 	}
 
-	user, err := s.store.UpdateUser(ctx, id, data)
-	if err != nil {
+	user := userFromData(id, data)
+
+	if err := s.store.UpdateUser(ctx, user); err != nil {
 		return users.User{}, err
 	}
 

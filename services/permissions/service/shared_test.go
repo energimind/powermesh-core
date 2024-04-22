@@ -15,13 +15,21 @@ import (
 var (
 	adminActor           = access.Actor{Role: access.RoleAdmin}
 	validOwnerID         = "userOwner1"
-	validRoleBindingID   = "rb1"
+	validRoleBindingID   = "1" // must match generated ID from testIDGenerator
 	validRoleBindingData = permissions.RoleBindingData{
 		OwnerID:      validOwnerID,
 		UserID:       "user1",
 		ResourceID:   "resource1",
 		ResourceType: permissions.ResourceTypeModel,
 		Role:         access.RoleAdmin,
+	}
+	validRoleBinding = permissions.RoleBinding{
+		ID:           validRoleBindingID,
+		OwnerID:      validRoleBindingData.OwnerID,
+		UserID:       validRoleBindingData.UserID,
+		ResourceID:   validRoleBindingData.ResourceID,
+		ResourceType: validRoleBindingData.ResourceType,
+		Role:         validRoleBindingData.Role,
 	}
 	validRoleBindingQuery = permissions.RoleBindingQuery{
 		UserID:     "user1",
@@ -99,36 +107,32 @@ func newTestStore(t *testing.T, forcedError bool) *testStore {
 
 func (s *testStore) CreateRoleBinding(
 	_ context.Context,
-	id string,
-	data permissions.RoleBindingData,
-) (permissions.RoleBinding, error) {
+	roleBinding permissions.RoleBinding,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return permissions.RoleBinding{}, s.forcedError
+		return s.forcedError
 	}
 
-	require.NotEmpty(s.t, id)
-	require.Equal(s.t, validRoleBindingData, data)
+	require.Equal(s.t, validRoleBinding, roleBinding)
 
-	return permissions.RoleBinding{ID: id}, nil
+	return nil
 }
 
 func (s *testStore) UpdateRoleBinding(
 	_ context.Context,
-	id string,
-	data permissions.RoleBindingData,
-) (permissions.RoleBinding, error) {
+	roleBinding permissions.RoleBinding,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return permissions.RoleBinding{}, s.forcedError
+		return s.forcedError
 	}
 
-	require.NotEmpty(s.t, id)
-	require.Equal(s.t, validRoleBindingData, data)
+	require.Equal(s.t, validRoleBinding, roleBinding)
 
-	return permissions.RoleBinding{ID: id}, nil
+	return nil
 }
 
 func (s *testStore) DeleteRoleBinding(

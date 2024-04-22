@@ -11,20 +11,46 @@ import (
 )
 
 var (
-	validNodeID     = "node1"
-	validRelationID = "relation1"
+	validNodeID     = "1" // must match generated ID from testIDGenerator
+	validRelationID = "1" // must match generated ID from testIDGenerator
 	validMeshData   = models.MeshData{
 		Code: "code1",
 	}
+	validMesh = models.Mesh{
+		ModelID: validModelID,
+		Code:    validMeshData.Code,
+	}
 	validNodeData = models.NodeData{
-		Kind:  "kind1",
-		Props: models.PropBag{},
+		Kind: "kind1",
+		Code: "code1",
+		Props: models.PropBag{
+			"section1": models.PropSection{
+				"prop1": "value1",
+			},
+		},
+	}
+	validNode = models.Node{
+		ID:    validNodeID,
+		Kind:  validNodeData.Kind,
+		Code:  validNodeData.Code,
+		Props: validNodeData.Props,
 	}
 	validRelationData = models.RelationData{
-		Kind:  "kind1",
-		From:  "node1",
-		To:    "node2",
-		Props: models.PropBag{},
+		Kind: "kind1",
+		From: "node1",
+		To:   "node2",
+		Props: models.PropBag{
+			"section2": models.PropSection{
+				"prop2": "value2",
+			},
+		},
+	}
+	validRelation = models.Relation{
+		ID:    validRelationID,
+		Kind:  validRelationData.Kind,
+		From:  validRelationData.From,
+		To:    validRelationData.To,
+		Props: validRelationData.Props,
 	}
 )
 
@@ -81,36 +107,32 @@ func newTestMeshStore(t *testing.T, forcedError bool) *testMeshStore {
 
 func (s *testMeshStore) CreateMesh(
 	_ context.Context,
-	modelID string,
-	data models.MeshData,
-) (models.Mesh, error) {
+	mesh models.Mesh,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return models.Mesh{}, s.forcedError
+		return s.forcedError
 	}
 
-	require.NotEmpty(s.t, modelID)
-	require.Equal(s.t, validMeshData, data)
+	require.Equal(s.t, validMesh, mesh)
 
-	return models.Mesh{ModelID: modelID}, nil
+	return nil
 }
 
 func (s *testMeshStore) UpdateMesh(
 	_ context.Context,
-	modelID string,
-	data models.MeshData,
-) (models.Mesh, error) {
+	mesh models.Mesh,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return models.Mesh{}, s.forcedError
+		return s.forcedError
 	}
 
-	require.NotEmpty(s.t, modelID)
-	require.Equal(s.t, validMeshData, data)
+	require.Equal(s.t, validMesh, mesh)
 
-	return models.Mesh{ModelID: modelID}, nil
+	return nil
 }
 
 func (s *testMeshStore) DeleteMesh(
@@ -149,37 +171,36 @@ func (s *testMeshStore) GetMesh(
 
 func (s *testMeshStore) CreateNode(
 	_ context.Context,
-	modelID, nodeID string,
-	data models.NodeData,
-) (models.Node, error) {
+	modelID string,
+	model models.Node,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return models.Node{}, s.forcedError
+		return s.forcedError
 	}
 
 	require.NotEmpty(s.t, modelID)
-	require.Equal(s.t, validNodeData, data)
+	require.Equal(s.t, validNode, model)
 
-	return models.Node{ID: nodeID}, nil
+	return nil
 }
 
 func (s *testMeshStore) UpdateNode(
 	_ context.Context,
-	modelID, nodeID string,
-	data models.NodeData,
-) (models.Node, error) {
+	modelID string,
+	model models.Node,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return models.Node{}, s.forcedError
+		return s.forcedError
 	}
 
 	require.NotEmpty(s.t, modelID)
-	require.NotEmpty(s.t, nodeID)
-	require.Equal(s.t, validNodeData, data)
+	require.Equal(s.t, validNode, model)
 
-	return models.Node{ID: nodeID}, nil
+	return nil
 }
 
 func (s *testMeshStore) DeleteNode(
@@ -220,37 +241,36 @@ func (s *testMeshStore) GetNode(
 
 func (s *testMeshStore) CreateRelation(
 	_ context.Context,
-	modelID, relationID string,
-	data models.RelationData,
-) (models.Relation, error) {
+	modelID string,
+	relation models.Relation,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return models.Relation{}, s.forcedError
+		return s.forcedError
 	}
 
 	require.NotEmpty(s.t, modelID)
-	require.Equal(s.t, validRelationData, data)
+	require.Equal(s.t, validRelation, relation)
 
-	return models.Relation{ID: relationID}, nil
+	return nil
 }
 
 func (s *testMeshStore) UpdateRelation(
 	_ context.Context,
-	modelID, relationID string,
-	data models.RelationData,
-) (models.Relation, error) {
+	modelID string,
+	relation models.Relation,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return models.Relation{}, s.forcedError
+		return s.forcedError
 	}
 
 	require.NotEmpty(s.t, modelID)
-	require.NotEmpty(s.t, relationID)
-	require.Equal(s.t, validRelationData, data)
+	require.Equal(s.t, validRelation, relation)
 
-	return models.Relation{ID: relationID}, nil
+	return nil
 }
 
 func (s *testMeshStore) DeleteRelation(

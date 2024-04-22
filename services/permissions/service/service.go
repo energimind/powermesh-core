@@ -16,8 +16,8 @@ type idGenerator interface {
 
 // store defines the external permissions store.
 type store interface {
-	CreateRoleBinding(ctx context.Context, id string, data permissions.RoleBindingData) (permissions.RoleBinding, error)
-	UpdateRoleBinding(ctx context.Context, id string, data permissions.RoleBindingData) (permissions.RoleBinding, error)
+	CreateRoleBinding(ctx context.Context, binding permissions.RoleBinding) error
+	UpdateRoleBinding(ctx context.Context, binding permissions.RoleBinding) error
 	DeleteRoleBinding(ctx context.Context, id string) error
 	GetRoleBinding(ctx context.Context, query permissions.RoleBindingQuery) (permissions.RoleBinding, error)
 	GetRoleBindingsByOwner(ctx context.Context, ownerID string) ([]permissions.RoleBinding, error)
@@ -64,8 +64,9 @@ func (s *PermissionService) CreateRoleBinding(
 		return permissions.RoleBinding{}, err
 	}
 
-	roleBinding, err := s.store.CreateRoleBinding(ctx, s.idGen.GenerateID(), data)
-	if err != nil {
+	roleBinding := roleBindingFromData(s.idGen.GenerateID(), data)
+
+	if err := s.store.CreateRoleBinding(ctx, roleBinding); err != nil {
 		return permissions.RoleBinding{}, err
 	}
 
@@ -100,8 +101,9 @@ func (s *PermissionService) UpdateRoleBinding(
 		return permissions.RoleBinding{}, err
 	}
 
-	roleBinding, err := s.store.UpdateRoleBinding(ctx, id, data)
-	if err != nil {
+	roleBinding := roleBindingFromData(id, data)
+
+	if err := s.store.UpdateRoleBinding(ctx, roleBinding); err != nil {
 		return permissions.RoleBinding{}, err
 	}
 

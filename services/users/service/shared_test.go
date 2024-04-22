@@ -15,7 +15,7 @@ import (
 
 var (
 	adminActor    = access.Actor{Role: access.RoleAdmin}
-	validUserID   = "1"
+	validUserID   = "1" // must match generated ID from testIDGenerator
 	validUserData = users.UserData{
 		Username: "user1",
 		Email:    "user1@somewhere.com",
@@ -93,36 +93,32 @@ func newTestStore(t *testing.T, forcedError bool) *testStore {
 
 func (s *testStore) CreateUser(
 	_ context.Context,
-	id string,
-	data users.UserData,
-) (users.User, error) {
+	user users.User,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return users.User{}, s.forcedError
+		return s.forcedError
 	}
 
-	require.NotEmpty(s.t, id)
-	require.Equal(s.t, validUserData, data)
+	require.Equal(s.t, validUser, user)
 
-	return users.User{ID: id}, nil
+	return nil
 }
 
 func (s *testStore) UpdateUser(
 	_ context.Context,
-	id string,
-	data users.UserData,
-) (users.User, error) {
+	user users.User,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
-		return users.User{}, s.forcedError
+		return s.forcedError
 	}
 
-	require.NotEmpty(s.t, id)
-	require.Equal(s.t, validUserData, data)
+	require.Equal(s.t, validUser, user)
 
-	return users.User{ID: id}, nil
+	return nil
 }
 
 func (s *testStore) DeleteUser(

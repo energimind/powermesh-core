@@ -18,24 +18,24 @@ type meshStore interface {
 
 // meshOperations defines the operations on meshes.
 type meshOperations interface {
-	CreateMesh(ctx context.Context, modelID string, data models.MeshData) (models.Mesh, error)
-	UpdateMesh(ctx context.Context, modelID string, data models.MeshData) (models.Mesh, error)
+	CreateMesh(ctx context.Context, mesh models.Mesh) error
+	UpdateMesh(ctx context.Context, mesh models.Mesh) error
 	DeleteMesh(ctx context.Context, modelID string) error
 	GetMesh(ctx context.Context, modelID string) (models.Mesh, error)
 }
 
 // nodeOperations defines the operations on nodes.
 type nodeOperations interface {
-	CreateNode(ctx context.Context, modelID, nodeID string, data models.NodeData) (models.Node, error)
-	UpdateNode(ctx context.Context, modelID, nodeID string, data models.NodeData) (models.Node, error)
+	CreateNode(ctx context.Context, modelID string, node models.Node) error
+	UpdateNode(ctx context.Context, modelID string, node models.Node) error
 	DeleteNode(ctx context.Context, modelID, nodeID string) error
 	GetNode(ctx context.Context, modelID, nodeID string) (models.Node, error)
 }
 
 // relationOperations defines the operations on relations.
 type relationOperations interface {
-	CreateRelation(ctx context.Context, modelID, relationID string, data models.RelationData) (models.Relation, error)
-	UpdateRelation(ctx context.Context, modelID, relationID string, data models.RelationData) (models.Relation, error)
+	CreateRelation(ctx context.Context, modelID string, relation models.Relation) error
+	UpdateRelation(ctx context.Context, modelID string, relation models.Relation) error
 	DeleteRelation(ctx context.Context, modelID, relationID string) error
 	GetRelation(ctx context.Context, modelID, relationID string) (models.Relation, error)
 }
@@ -81,8 +81,9 @@ func (s *MeshService) CreateMesh(
 		return models.Mesh{}, err
 	}
 
-	mesh, err := s.store.CreateMesh(ctx, modelID, data)
-	if err != nil {
+	mesh := meshFromData(modelID, data)
+
+	if err := s.store.CreateMesh(ctx, mesh); err != nil {
 		return models.Mesh{}, err
 	}
 
@@ -111,8 +112,9 @@ func (s *MeshService) UpdateMesh(
 		return models.Mesh{}, err
 	}
 
-	mesh, err := s.store.UpdateMesh(ctx, modelID, data)
-	if err != nil {
+	mesh := meshFromData(modelID, data)
+
+	if err := s.store.UpdateMesh(ctx, mesh); err != nil {
 		return models.Mesh{}, err
 	}
 
@@ -181,14 +183,10 @@ func (s *MeshService) GetMesh(
 func (s *MeshService) CreateNode(
 	ctx context.Context,
 	actor access.Actor,
-	modelID, nodeID string,
+	modelID string,
 	data models.NodeData,
 ) (models.Node, error) {
 	if err := validateModelID(modelID); err != nil {
-		return models.Node{}, err
-	}
-
-	if err := validateNodeID(nodeID); err != nil {
 		return models.Node{}, err
 	}
 
@@ -196,8 +194,9 @@ func (s *MeshService) CreateNode(
 		return models.Node{}, err
 	}
 
-	node, err := s.store.CreateNode(ctx, modelID, nodeID, data)
-	if err != nil {
+	node := nodeFromData(s.idGen.GenerateID(), data)
+
+	if err := s.store.CreateNode(ctx, modelID, node); err != nil {
 		return models.Node{}, err
 	}
 
@@ -240,8 +239,9 @@ func (s *MeshService) UpdateNode(
 		return models.Node{}, err
 	}
 
-	node, err := s.store.UpdateNode(ctx, modelID, nodeID, data)
-	if err != nil {
+	node := nodeFromData(nodeID, data)
+
+	if err := s.store.UpdateNode(ctx, modelID, node); err != nil {
 		return models.Node{}, err
 	}
 
@@ -330,14 +330,10 @@ func (s *MeshService) GetNode(
 func (s *MeshService) CreateRelation(
 	ctx context.Context,
 	actor access.Actor,
-	modelID, relationID string,
+	modelID string,
 	data models.RelationData,
 ) (models.Relation, error) {
 	if err := validateModelID(modelID); err != nil {
-		return models.Relation{}, err
-	}
-
-	if err := validateRelationID(relationID); err != nil {
 		return models.Relation{}, err
 	}
 
@@ -345,8 +341,9 @@ func (s *MeshService) CreateRelation(
 		return models.Relation{}, err
 	}
 
-	relation, err := s.store.CreateRelation(ctx, modelID, relationID, data)
-	if err != nil {
+	relation := relationFromData(s.idGen.GenerateID(), data)
+
+	if err := s.store.CreateRelation(ctx, modelID, relation); err != nil {
 		return models.Relation{}, err
 	}
 
@@ -389,8 +386,9 @@ func (s *MeshService) UpdateRelation(
 		return models.Relation{}, err
 	}
 
-	relation, err := s.store.UpdateRelation(ctx, modelID, relationID, data)
-	if err != nil {
+	relation := relationFromData(relationID, data)
+
+	if err := s.store.UpdateRelation(ctx, modelID, relation); err != nil {
 		return models.Relation{}, err
 	}
 

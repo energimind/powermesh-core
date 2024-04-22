@@ -238,7 +238,6 @@ func TestMeshService_CreateNode(t *testing.T) {
 	tests := map[string]struct {
 		actor         access.Actor
 		modelID       string
-		nodeID        string
 		data          models.NodeData
 		storeError    bool
 		listenerError bool
@@ -250,23 +249,15 @@ func TestMeshService_CreateNode(t *testing.T) {
 			modelID: "",
 			wantErr: errorz.ValidationError{},
 		},
-		"invalid-nodeID": {
-			actor:   adminActor,
-			modelID: validModelID,
-			nodeID:  "",
-			wantErr: errorz.ValidationError{},
-		},
 		"invalid-data": {
 			actor:   adminActor,
 			modelID: validModelID,
-			nodeID:  validNodeID,
 			data:    models.NodeData{},
 			wantErr: errorz.ValidationError{},
 		},
 		"store-error": {
 			actor:      adminActor,
 			modelID:    validModelID,
-			nodeID:     validNodeID,
 			data:       validNodeData,
 			storeError: true,
 			wantErr:    errorz.StoreError{},
@@ -274,7 +265,6 @@ func TestMeshService_CreateNode(t *testing.T) {
 		"listener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
-			nodeID:        validNodeID,
 			data:          validNodeData,
 			listenerError: true,
 			wantErr:       errorz.InternalError{},
@@ -282,7 +272,6 @@ func TestMeshService_CreateNode(t *testing.T) {
 		"success": {
 			actor:     adminActor,
 			modelID:   validModelID,
-			nodeID:    validNodeID,
 			data:      validNodeData,
 			wantEvent: models.MeshUpdated,
 		},
@@ -295,7 +284,7 @@ func TestMeshService_CreateNode(t *testing.T) {
 
 			svc := NewMeshService(newTestIDGenerator(), ts, tl)
 
-			node, err := svc.CreateNode(context.Background(), test.actor, test.modelID, test.nodeID, test.data)
+			node, err := svc.CreateNode(context.Background(), test.actor, test.modelID, test.data)
 
 			if test.wantErr != nil {
 				require.Error(t, err)
@@ -512,7 +501,6 @@ func TestMeshService_CreateRelation(t *testing.T) {
 	tests := map[string]struct {
 		actor         access.Actor
 		modelID       string
-		relationID    string
 		data          models.RelationData
 		storeError    bool
 		listenerError bool
@@ -524,23 +512,15 @@ func TestMeshService_CreateRelation(t *testing.T) {
 			modelID: "",
 			wantErr: errorz.ValidationError{},
 		},
-		"invalid-relationID": {
-			actor:      adminActor,
-			modelID:    validModelID,
-			relationID: "",
-			wantErr:    errorz.ValidationError{},
-		},
 		"invalid-data": {
-			actor:      adminActor,
-			modelID:    validModelID,
-			relationID: validRelationID,
-			data:       models.RelationData{},
-			wantErr:    errorz.ValidationError{},
+			actor:   adminActor,
+			modelID: validModelID,
+			data:    models.RelationData{},
+			wantErr: errorz.ValidationError{},
 		},
 		"store-error": {
 			actor:      adminActor,
 			modelID:    validModelID,
-			relationID: validRelationID,
 			data:       validRelationData,
 			storeError: true,
 			wantErr:    errorz.StoreError{},
@@ -548,17 +528,15 @@ func TestMeshService_CreateRelation(t *testing.T) {
 		"listener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
-			relationID:    validRelationID,
 			data:          validRelationData,
 			listenerError: true,
 			wantErr:       errorz.InternalError{},
 		},
 		"success": {
-			actor:      adminActor,
-			modelID:    validModelID,
-			relationID: validRelationID,
-			data:       validRelationData,
-			wantEvent:  models.MeshUpdated,
+			actor:     adminActor,
+			modelID:   validModelID,
+			data:      validRelationData,
+			wantEvent: models.MeshUpdated,
 		},
 	}
 
@@ -569,7 +547,7 @@ func TestMeshService_CreateRelation(t *testing.T) {
 
 			svc := NewMeshService(newTestIDGenerator(), ts, tl)
 
-			relation, err := svc.CreateRelation(context.Background(), test.actor, test.modelID, test.relationID, test.data)
+			relation, err := svc.CreateRelation(context.Background(), test.actor, test.modelID, test.data)
 
 			if test.wantErr != nil {
 				require.Error(t, err)

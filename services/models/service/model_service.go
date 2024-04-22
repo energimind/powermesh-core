@@ -11,8 +11,8 @@ import (
 
 // modelStore defines the external model store.
 type modelStore interface {
-	CreateModel(ctx context.Context, id string, data models.ModelData) (models.Model, error)
-	UpdateModel(ctx context.Context, id string, data models.ModelData) (models.Model, error)
+	CreateModel(ctx context.Context, model models.Model) error
+	UpdateModel(ctx context.Context, model models.Model) error
 	DeleteModel(ctx context.Context, id string) error
 	GetModel(ctx context.Context, id string) (models.Model, error)
 	GetModelsByIDs(ctx context.Context, ids []string) ([]models.Model, error)
@@ -58,8 +58,9 @@ func (s *ModelService) CreateModel(
 		return models.Model{}, err
 	}
 
-	model, err := s.store.CreateModel(ctx, s.idGen.GenerateID(), data)
-	if err != nil {
+	model := modelFromData(s.idGen.GenerateID(), data)
+
+	if err := s.store.CreateModel(ctx, model); err != nil {
 		return models.Model{}, err
 	}
 
@@ -92,8 +93,9 @@ func (s *ModelService) UpdateModel(
 		return models.Model{}, err
 	}
 
-	model, err := s.store.UpdateModel(ctx, id, data)
-	if err != nil {
+	model := modelFromData(id, data)
+
+	if err := s.store.UpdateModel(ctx, model); err != nil {
 		return models.Model{}, err
 	}
 
