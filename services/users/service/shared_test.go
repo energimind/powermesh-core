@@ -25,7 +25,6 @@ var (
 		Username: validUserData.Username,
 		Email:    validUserData.Email,
 	}
-	missingUserID = "missing"
 )
 
 type testIDGenerator struct {
@@ -157,11 +156,7 @@ func (s *testStore) GetUser(
 		return validUser, nil
 	}
 
-	if id == missingUserID {
-		return users.User{}, errorz.NewNotFoundError("user not found")
-	}
-
-	return users.User{ID: id}, nil
+	return users.User{}, errorz.NewNotFoundError("user not found")
 }
 
 func (s *testStore) GetUsersByIDs(

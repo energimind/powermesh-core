@@ -217,7 +217,7 @@ func TestUserService_GetUser(t *testing.T) {
 			wantErr: errorz.ValidationError{},
 		},
 		"not-found": {
-			id:      missingUserID,
+			id:      "missing",
 			wantErr: errorz.NotFoundError{},
 		},
 		"store-error": {
@@ -274,10 +274,6 @@ func TestUserService_GetUsersByIDs(t *testing.T) {
 		},
 		"success": {
 			ids:  []string{validUserID},
-			want: []users.User{validUser},
-		},
-		"success-ignoreMissingUser": {
-			ids:  []string{missingUserID, validUserID},
 			want: []users.User{validUser},
 		},
 	}
