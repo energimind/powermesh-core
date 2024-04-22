@@ -37,6 +37,9 @@ type testIDGenerator struct {
 	idCounter atomic.Int64
 }
 
+// Ensure that the testIDGenerator implements the idGenerator interface.
+var _ idGenerator = (*testIDGenerator)(nil)
+
 func newTestIDGenerator() *testIDGenerator {
 	return &testIDGenerator{}
 }
@@ -49,6 +52,9 @@ type testListener struct {
 	forcedError error
 	eventFired  permissions.Event
 }
+
+// Ensure that the testListener implements the listener interface.
+var _ listener = (*testListener)(nil)
 
 func newTestListener(forcedError bool) *testListener {
 	var err error
@@ -74,6 +80,9 @@ type testStore struct {
 	t           *testing.T
 	forcedError error
 }
+
+// Ensure that the testStore implements the store interface.
+var _ store = (*testStore)(nil)
 
 func newTestStore(t *testing.T, forcedError bool) *testStore {
 	var err error

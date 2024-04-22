@@ -27,6 +27,9 @@ type testIDGenerator struct {
 	idCounter atomic.Int64
 }
 
+// Ensure that the testIDGenerator implements the idGenerator interface.
+var _ idGenerator = (*testIDGenerator)(nil)
+
 func newTestIDGenerator() *testIDGenerator {
 	return &testIDGenerator{}
 }

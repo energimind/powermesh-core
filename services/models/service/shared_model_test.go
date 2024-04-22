@@ -15,6 +15,9 @@ type testModelListener struct {
 	eventFired models.ModelEvent
 }
 
+// Ensure that the testModelListener implements the modelListener interface.
+var _ modelListener = (*testModelListener)(nil)
+
 func newTestModelListener(forcedError bool) *testModelListener {
 	var err error
 
@@ -41,6 +44,9 @@ type testModelStore struct {
 	t           *testing.T
 	forcedError error
 }
+
+// Ensure that the testModelStore implements the modelStore interface.
+var _ modelStore = (*testModelStore)(nil)
 
 func newTestModelStore(t *testing.T, forcedError bool) *testModelStore {
 	var err error
