@@ -32,7 +32,7 @@ type listener interface {
 //
 // It implements the users.UserService interface.
 //
-// We do not wrap the errors returned by the repository because they are already
+// We do not wrap the errors returned by the store because they are already
 // packed as domain errors. Therefore, we disable the wrapcheck linter for these calls.
 type UserService struct {
 	idGen    idGenerator
