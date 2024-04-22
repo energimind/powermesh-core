@@ -221,7 +221,7 @@ func TestModelService_GetModel(t *testing.T) {
 			wantErr:  errorz.ValidationError{},
 		},
 		"not-found": {
-			id:      missingModelID,
+			id:      "missing",
 			wantErr: errorz.NotFoundError{},
 		},
 		"store-error": {

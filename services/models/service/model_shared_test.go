@@ -5,15 +5,12 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/energimind/powermesh-core/access"
 	"github.com/energimind/powermesh-core/errorz"
 	"github.com/energimind/powermesh-core/services/models"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	adminActor     = access.Actor{Role: access.RoleAdmin}
-	validModelID   = "1"
 	validModelData = models.ModelData{
 		Code: "code1",
 		Name: "name1",
@@ -23,12 +20,11 @@ var (
 		Code: validModelData.Code,
 		Name: validModelData.Name,
 	}
-	missingModelID = "missing"
 )
 
 type testModelListener struct {
-	forceError error
-	eventFired models.ModelEvent
+	forcedError error
+	eventFired  models.ModelEvent
 }
 
 // Ensure that the testModelListener implements the modelListener interface.
@@ -42,13 +38,13 @@ func newTestModelListener(forcedError bool) *testModelListener {
 	}
 
 	return &testModelListener{
-		forceError: err,
+		forcedError: err,
 	}
 }
 
 func (l *testModelListener) HandleModelEvent(_ context.Context, event models.ModelEvent) error {
-	if l.forceError != nil {
-		return l.forceError
+	if l.forcedError != nil {
+		return l.forcedError
 	}
 
 	l.eventFired = event
@@ -140,10 +136,6 @@ func (s *testModelStore) GetModel(
 
 	if id == validModelID {
 		return models.Model{ID: id}, nil
-	}
-
-	if id == missingModelID {
-		return models.Model{}, errorz.NewNotFoundError("model %v not found", id)
 	}
 
 	return models.Model{}, errorz.NewNotFoundError("model %v not found", id)

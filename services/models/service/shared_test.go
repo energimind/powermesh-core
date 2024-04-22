@@ -3,6 +3,13 @@ package service
 import (
 	"strconv"
 	"sync/atomic"
+
+	"github.com/energimind/powermesh-core/access"
+)
+
+var (
+	adminActor   = access.Actor{Role: access.RoleAdmin}
+	validModelID = "1"
 )
 
 type testIDGenerator struct {
