@@ -216,6 +216,10 @@ func TestUserService_GetUser(t *testing.T) {
 			id:      "",
 			wantErr: errorz.ValidationError{},
 		},
+		"not-found": {
+			id:      missingUserID,
+			wantErr: errorz.NotFoundError{},
+		},
 		"store-error": {
 			id:         validUserID,
 			storeError: true,
@@ -255,6 +259,10 @@ func TestUserService_GetUsersByIDs(t *testing.T) {
 		want       []users.User
 		wantErr    error
 	}{
+		"empty-ids": {
+			ids:  []string{},
+			want: []users.User{},
+		},
 		"invalid-ids": {
 			ids:     []string{""},
 			wantErr: errorz.ValidationError{},

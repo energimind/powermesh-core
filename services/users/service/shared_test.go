@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"strconv"
 	"sync/atomic"
 	"testing"
@@ -48,7 +49,7 @@ func newTestListener(forcedError bool) *testListener {
 	var err error
 
 	if forcedError {
-		err = errorz.NewGatewayError("forced-error")
+		err = errors.New("forced-error")
 	}
 
 	return &testListener{forcedError: err}
@@ -82,7 +83,11 @@ func newTestStore(t *testing.T, forcedError bool) *testStore {
 	}
 }
 
-func (s *testStore) CreateUser(_ context.Context, id string, data users.UserData) (users.User, error) {
+func (s *testStore) CreateUser(
+	_ context.Context,
+	id string,
+	data users.UserData,
+) (users.User, error) {
 	s.t.Helper()
 
 	if s.forcedError != nil {
@@ -95,7 +100,11 @@ func (s *testStore) CreateUser(_ context.Context, id string, data users.UserData
 	return users.User{ID: id}, nil
 }
 
-func (s *testStore) UpdateUser(_ context.Context, id string, data users.UserData) (users.User, error) {
+func (s *testStore) UpdateUser(
+	_ context.Context,
+	id string,
+	data users.UserData,
+) (users.User, error) {
 	s.t.Helper()
 
 	if s.forcedError != nil {
@@ -108,7 +117,10 @@ func (s *testStore) UpdateUser(_ context.Context, id string, data users.UserData
 	return users.User{ID: id}, nil
 }
 
-func (s *testStore) DeleteUser(_ context.Context, id string) error {
+func (s *testStore) DeleteUser(
+	_ context.Context,
+	id string,
+) error {
 	s.t.Helper()
 
 	if s.forcedError != nil {
@@ -120,7 +132,10 @@ func (s *testStore) DeleteUser(_ context.Context, id string) error {
 	return nil
 }
 
-func (s *testStore) GetUser(_ context.Context, id string) (users.User, error) {
+func (s *testStore) GetUser(
+	_ context.Context,
+	id string,
+) (users.User, error) {
 	s.t.Helper()
 
 	if s.forcedError != nil {
@@ -140,7 +155,33 @@ func (s *testStore) GetUser(_ context.Context, id string) (users.User, error) {
 	return users.User{ID: id}, nil
 }
 
-func (s *testStore) GetUserByUsername(_ context.Context, username string) (users.User, error) {
+func (s *testStore) GetUsersByIDs(
+	_ context.Context,
+	ids []string,
+) ([]users.User, error) {
+	s.t.Helper()
+
+	if s.forcedError != nil {
+		return nil, s.forcedError
+	}
+
+	require.NotEmpty(s.t, ids)
+
+	found := make([]users.User, 0, len(ids))
+
+	for _, id := range ids {
+		if id == validUserID {
+			found = append(found, validUser)
+		}
+	}
+
+	return found, nil
+}
+
+func (s *testStore) GetUserByUsername(
+	_ context.Context,
+	username string,
+) (users.User, error) {
 	s.t.Helper()
 
 	if s.forcedError != nil {

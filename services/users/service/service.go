@@ -20,6 +20,7 @@ type store interface {
 	UpdateUser(ctx context.Context, id string, data users.UserData) (users.User, error)
 	DeleteUser(ctx context.Context, id string) error
 	GetUser(ctx context.Context, id string) (users.User, error)
+	GetUsersByIDs(ctx context.Context, ids []string) ([]users.User, error)
 	GetUserByUsername(ctx context.Context, username string) (users.User, error)
 }
 
@@ -168,23 +169,19 @@ func (s *UserService) GetUsersByIDs(
 	ctx context.Context,
 	ids []string,
 ) ([]users.User, error) {
-	found := make([]users.User, 0, len(ids))
+	if len(ids) == 0 {
+		return []users.User{}, nil
+	}
 
 	for _, id := range ids {
 		if err := validateID(id); err != nil {
 			return nil, err
 		}
+	}
 
-		user, err := s.store.GetUser(ctx, id)
-		if err != nil {
-			if errorz.IsNotFoundError(err) {
-				continue
-			}
-
-			return nil, err
-		}
-
-		found = append(found, user)
+	found, err := s.store.GetUsersByIDs(ctx, ids)
+	if err != nil {
+		return nil, err
 	}
 
 	return found, nil
