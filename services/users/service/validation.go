@@ -7,25 +7,25 @@ import (
 	"github.com/energimind/powermesh-core/services/users"
 )
 
-func validateID(id string) error {
-	if id == "" {
-		return errorz.NewValidationError("id is required")
+func requireString(value, name string) error {
+	if value == "" {
+		return errorz.NewValidationError(name + " is required")
 	}
 
 	return nil
+}
+
+func validateID(id string) error {
+	return requireString(id, "id")
 }
 
 func validateUsername(username string) error {
-	if username == "" {
-		return errorz.NewValidationError("username is required")
-	}
-
-	return nil
+	return requireString(username, "username")
 }
 
 func validateEmail(email string) error {
-	if email == "" {
-		return errorz.NewValidationError("email is required")
+	if err := requireString(email, "email"); err != nil {
+		return err
 	}
 
 	_, err := mail.ParseAddress(email)

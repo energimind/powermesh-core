@@ -5,9 +5,25 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/energimind/powermesh-core/access"
 	"github.com/energimind/powermesh-core/errorz"
 	"github.com/energimind/powermesh-core/services/models"
 	"github.com/stretchr/testify/require"
+)
+
+var (
+	adminActor     = access.Actor{Role: access.RoleAdmin}
+	validModelID   = "1"
+	validModelData = models.ModelData{
+		Code: "code1",
+		Name: "name1",
+	}
+	validModel = models.Model{
+		ID:   validModelID,
+		Code: validModelData.Code,
+		Name: validModelData.Name,
+	}
+	missingModelID = "missing"
 )
 
 type testModelListener struct {

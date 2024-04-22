@@ -3,24 +3,6 @@ package service
 import (
 	"strconv"
 	"sync/atomic"
-
-	"github.com/energimind/powermesh-core/access"
-	"github.com/energimind/powermesh-core/services/models"
-)
-
-var (
-	adminActor     = access.Actor{Role: access.RoleAdmin}
-	validModelID   = "1"
-	validModelData = models.ModelData{
-		Code: "code1",
-		Name: "name1",
-	}
-	validModel = models.Model{
-		ID:   validModelID,
-		Code: validModelData.Code,
-		Name: validModelData.Name,
-	}
-	missingModelID = "missing"
 )
 
 type testIDGenerator struct {

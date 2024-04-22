@@ -6,36 +6,28 @@ import (
 	"github.com/energimind/powermesh-core/services/permissions"
 )
 
-func validateID(id string) error {
-	if id == "" {
-		return errorz.NewValidationError("id is required")
+func requireString(value, name string) error {
+	if value == "" {
+		return errorz.NewValidationError(name + " is required")
 	}
 
 	return nil
+}
+
+func validateID(id string) error {
+	return requireString(id, "id")
 }
 
 func validateOwnerID(ownerID string) error {
-	if ownerID == "" {
-		return errorz.NewValidationError("ownerID is required")
-	}
-
-	return nil
+	return requireString(ownerID, "owner id")
 }
 
 func validateUserID(userID string) error {
-	if userID == "" {
-		return errorz.NewValidationError("userID is required")
-	}
-
-	return nil
+	return requireString(userID, "user id")
 }
 
 func validateResourceID(resourceID string) error {
-	if resourceID == "" {
-		return errorz.NewValidationError("resourceID is required")
-	}
-
-	return nil
+	return requireString(resourceID, "resource id")
 }
 
 func validateResourceType(resourceType permissions.ResourceType) error {

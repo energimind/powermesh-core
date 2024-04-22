@@ -4,158 +4,52 @@ import (
 	"testing"
 
 	"github.com/energimind/powermesh-core/access"
+	"github.com/energimind/powermesh-core/errorz"
 	"github.com/energimind/powermesh-core/services/permissions"
 	"github.com/stretchr/testify/require"
 )
 
+func Test_requireString(t *testing.T) {
+	t.Parallel()
+
+	require.NoError(t, requireString("value", "name"))
+	require.Error(t, requireString("", "name"))
+	require.IsType(t, errorz.ValidationError{}, requireString("", "name"))
+}
+
 func Test_validateID(t *testing.T) {
 	t.Parallel()
 
-	tests := map[string]struct {
-		id      string
-		wantErr bool
-	}{
-		"empty": {
-			id:      "",
-			wantErr: true,
-		},
-		"valid": {
-			id:      "1",
-			wantErr: false,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			err := validateID(test.id)
-
-			if test.wantErr {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-			}
-		})
-	}
+	require.NoError(t, validateID("1"))
+	require.Error(t, validateID(""))
 }
 
 func Test_validateOwnerID(t *testing.T) {
 	t.Parallel()
 
-	tests := map[string]struct {
-		ownerID string
-		wantErr bool
-	}{
-		"empty": {
-			ownerID: "",
-			wantErr: true,
-		},
-		"valid": {
-			ownerID: "1",
-			wantErr: false,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			err := validateOwnerID(test.ownerID)
-
-			if test.wantErr {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-			}
-		})
-	}
+	require.NoError(t, validateOwnerID("1"))
+	require.Error(t, validateOwnerID(""))
 }
 
 func Test_validateResourceID(t *testing.T) {
 	t.Parallel()
 
-	tests := map[string]struct {
-		resourceID string
-		wantErr    bool
-	}{
-		"empty": {
-			resourceID: "",
-			wantErr:    true,
-		},
-		"valid": {
-			resourceID: "1",
-			wantErr:    false,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			err := validateResourceID(test.resourceID)
-
-			if test.wantErr {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-			}
-		})
-	}
+	require.NoError(t, validateResourceID("1"))
+	require.Error(t, validateResourceID(""))
 }
 
 func Test_validateResourceType(t *testing.T) {
 	t.Parallel()
 
-	tests := map[string]struct {
-		resourceType permissions.ResourceType
-		wantErr      bool
-	}{
-		"empty": {
-			resourceType: permissions.ResourceType(100),
-			wantErr:      true,
-		},
-		"valid": {
-			resourceType: permissions.ResourceTypeModel,
-			wantErr:      false,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			err := validateResourceType(test.resourceType)
-
-			if test.wantErr {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-			}
-		})
-	}
+	require.NoError(t, validateResourceType(permissions.ResourceTypeModel))
+	require.Error(t, validateResourceType(permissions.ResourceType(100)))
 }
 
 func Test_validateRole(t *testing.T) {
 	t.Parallel()
 
-	tests := map[string]struct {
-		role    access.Role
-		wantErr bool
-	}{
-		"empty": {
-			role:    access.Role(100),
-			wantErr: true,
-		},
-		"valid": {
-			role:    access.RoleAdmin,
-			wantErr: false,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			err := validateRole(test.role)
-
-			if test.wantErr {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-			}
-		})
-	}
+	require.NoError(t, validateRole(access.RoleAdmin))
+	require.Error(t, validateRole(access.Role(100)))
 }
 
 func Test_validateRoleBindingData(t *testing.T) {
