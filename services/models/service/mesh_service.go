@@ -93,7 +93,7 @@ func (s *MeshService) CreateMesh(
 		Updates:   mesh,
 		Timestamp: s.now(),
 	}); err != nil {
-		return models.Mesh{}, errorz.NewInternalError("mesh event handler failed: %v", err)
+		return models.Mesh{}, errorz.NewInternalError("mesh.created event handler failed: %v", err)
 	}
 
 	return mesh, nil
@@ -124,7 +124,7 @@ func (s *MeshService) UpdateMesh(
 		Updates:   mesh,
 		Timestamp: s.now(),
 	}); err != nil {
-		return models.Mesh{}, errorz.NewInternalError("mesh event handler failed: %v", err)
+		return models.Mesh{}, errorz.NewInternalError("mesh.updated event handler failed: %v", err)
 	}
 
 	return mesh, nil
@@ -152,7 +152,7 @@ func (s *MeshService) DeleteMesh(
 		Deletes:   models.Mesh{ModelID: modelID},
 		Timestamp: s.now(),
 	}); err != nil {
-		return errorz.NewInternalError("mesh event handler failed: %v", err)
+		return errorz.NewInternalError("mesh.deleted event handler failed: %v", err)
 	}
 
 	return nil
@@ -212,7 +212,7 @@ func (s *MeshService) CreateNode(
 			Timestamp: s.now(),
 		},
 	); err != nil {
-		return models.Node{}, errorz.NewInternalError("mesh event handler failed: %v", err)
+		return models.Node{}, errorz.NewInternalError("mesh-contents.created event handler failed: %v", err)
 	}
 
 	return node, nil
@@ -257,7 +257,7 @@ func (s *MeshService) UpdateNode(
 			Timestamp: s.now(),
 		},
 	); err != nil {
-		return models.Node{}, errorz.NewInternalError("mesh event handler failed: %v", err)
+		return models.Node{}, errorz.NewInternalError("mesh-contents.updated event handler failed: %v", err)
 	}
 
 	return node, nil
@@ -295,7 +295,7 @@ func (s *MeshService) DeleteNode(
 			Timestamp: s.now(),
 		},
 	); err != nil {
-		return errorz.NewInternalError("mesh event handler failed: %v", err)
+		return errorz.NewInternalError("mesh-contents.deleted event handler failed: %v", err)
 	}
 
 	return nil
@@ -359,7 +359,7 @@ func (s *MeshService) CreateRelation(
 			Timestamp: s.now(),
 		},
 	); err != nil {
-		return models.Relation{}, errorz.NewInternalError("mesh event handler failed: %v", err)
+		return models.Relation{}, errorz.NewInternalError("mesh-contents.created event handler failed: %v", err)
 	}
 
 	return relation, nil
@@ -404,7 +404,7 @@ func (s *MeshService) UpdateRelation(
 			Timestamp: s.now(),
 		},
 	); err != nil {
-		return models.Relation{}, errorz.NewInternalError("mesh event handler failed: %v", err)
+		return models.Relation{}, errorz.NewInternalError("mesh-contents.updated event handler failed: %v", err)
 	}
 
 	return relation, nil
@@ -442,7 +442,7 @@ func (s *MeshService) DeleteRelation(
 			Timestamp: s.now(),
 		},
 	); err != nil {
-		return errorz.NewInternalError("mesh event handler failed: %v", err)
+		return errorz.NewInternalError("mesh-contents.deleted event handler failed: %v", err)
 	}
 
 	return nil

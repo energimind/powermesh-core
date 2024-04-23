@@ -78,7 +78,7 @@ func (s *PermissionService) CreateRoleBinding(
 	}
 
 	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return permissions.RoleBinding{}, errorz.NewInternalError("permission event handler failed: %v", err)
+		return permissions.RoleBinding{}, errorz.NewInternalError("role-binding.created event handler failed: %v", err)
 	}
 
 	return roleBinding, nil
@@ -115,7 +115,7 @@ func (s *PermissionService) UpdateRoleBinding(
 	}
 
 	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return permissions.RoleBinding{}, errorz.NewInternalError("permission event handler failed: %v", err)
+		return permissions.RoleBinding{}, errorz.NewInternalError("role-binding.updated event handler failed: %v", err)
 	}
 
 	return roleBinding, nil
@@ -146,7 +146,7 @@ func (s *PermissionService) DeleteRoleBinding(
 	}
 
 	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return errorz.NewInternalError("permission event handler failed: %v", err)
+		return errorz.NewInternalError("role-binding.deleted event handler failed: %v", err)
 	}
 
 	return nil

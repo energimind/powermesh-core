@@ -76,7 +76,7 @@ func (s *UserService) CreateUser(
 		User:      user,
 		Timestamp: s.now(),
 	}); err != nil {
-		return users.User{}, errorz.NewInternalError("user event handler failed: %v", err)
+		return users.User{}, errorz.NewInternalError("user.created event handler failed: %v", err)
 	}
 
 	return user, nil
@@ -111,7 +111,7 @@ func (s *UserService) UpdateUser(
 		User:      user,
 		Timestamp: s.now(),
 	}); err != nil {
-		return users.User{}, errorz.NewInternalError("user event handler failed: %v", err)
+		return users.User{}, errorz.NewInternalError("user.updated event handler failed: %v", err)
 	}
 
 	return user, nil
@@ -139,7 +139,7 @@ func (s *UserService) DeleteUser(
 		User:      users.User{ID: id},
 		Timestamp: s.now(),
 	}); err != nil {
-		return errorz.NewInternalError("user event handler failed: %v", err)
+		return errorz.NewInternalError("user.deleted event handler failed: %v", err)
 	}
 
 	return nil

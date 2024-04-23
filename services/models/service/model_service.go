@@ -70,7 +70,7 @@ func (s *ModelService) CreateModel(
 		Model:     model,
 		Timestamp: s.now(),
 	}); err != nil {
-		return models.Model{}, errorz.NewInternalError("model event handler failed: %v", err)
+		return models.Model{}, errorz.NewInternalError("model.created event handler failed: %v", err)
 	}
 
 	return model, nil
@@ -105,7 +105,7 @@ func (s *ModelService) UpdateModel(
 		Model:     model,
 		Timestamp: s.now(),
 	}); err != nil {
-		return models.Model{}, errorz.NewInternalError("model event handler failed: %v", err)
+		return models.Model{}, errorz.NewInternalError("model.updated event handler failed: %v", err)
 	}
 
 	return model, nil
@@ -133,7 +133,7 @@ func (s *ModelService) DeleteModel(
 		Model:     models.Model{ID: id},
 		Timestamp: s.now(),
 	}); err != nil {
-		return errorz.NewInternalError("model event handler failed: %v", err)
+		return errorz.NewInternalError("model.deleted event handler failed: %v", err)
 	}
 
 	return nil
