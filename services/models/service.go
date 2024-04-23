@@ -46,7 +46,7 @@ type nodeOperations interface {
 
 // relationOperations defines the operations on relations.
 type relationOperations interface {
-	CreateRelation(ctx context.Context, actor access.Actor, modelID, data RelationData) (Relation, error)
+	CreateRelation(ctx context.Context, actor access.Actor, modelID string, data RelationData) (Relation, error)
 	UpdateRelation(ctx context.Context, actor access.Actor, modelID, relationID string, data RelationData) (Relation, error)
 	DeleteRelation(ctx context.Context, actor access.Actor, modelID, relationID string) error
 	GetRelation(ctx context.Context, modelID, relationID string) (Relation, error)

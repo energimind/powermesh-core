@@ -42,6 +42,9 @@ type PermissionService struct {
 	now      func() time.Time
 }
 
+// Ensure PermissionService implements the permissions.RoleBindingService interface.
+var _ permissions.RoleBindingService = (*PermissionService)(nil)
+
 // NewPermissionService creates a new permissions service.
 func NewPermissionService(idGen idGenerator, store store, listener listener) *PermissionService {
 	return &PermissionService{

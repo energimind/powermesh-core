@@ -36,6 +36,9 @@ type ModelService struct {
 	now      func() time.Time
 }
 
+// Ensure ModelService implements the models.ModelService interface.
+var _ models.ModelService = (*ModelService)(nil)
+
 // NewModelService creates a new model service.
 func NewModelService(idGen idGenerator, store modelStore, listener modelListener) *ModelService {
 	return &ModelService{

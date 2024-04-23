@@ -58,6 +58,9 @@ type MeshService struct {
 	now      func() time.Time
 }
 
+// Ensure MeshService implements the models.MeshService interface.
+var _ models.MeshService = (*MeshService)(nil)
+
 // NewMeshService creates a new mesh service.
 func NewMeshService(idGen idGenerator, store meshStore, listener meshListener) *MeshService {
 	return &MeshService{

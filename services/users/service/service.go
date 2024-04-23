@@ -42,6 +42,9 @@ type UserService struct {
 	now      func() time.Time
 }
 
+// Ensure UserService implements the users.UserService interface.
+var _ users.UserService = (*UserService)(nil)
+
 // NewUserService creates a new user service.
 func NewUserService(idGen idGenerator, store store, listener listener) *UserService {
 	return &UserService{
