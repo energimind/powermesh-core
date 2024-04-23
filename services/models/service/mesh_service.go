@@ -87,17 +87,8 @@ func (s *MeshService) CreateMesh(
 		return models.Mesh{}, err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshCreated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Updates: mesh,
-	}
-
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return models.Mesh{}, errorz.NewInternalError("mesh.created event handler failed: %v", err)
+	if err := s.fireMeshEvent(ctx, actor, models.MeshCreated, mesh); err != nil {
+		return models.Mesh{}, err
 	}
 
 	return mesh, nil
@@ -122,17 +113,8 @@ func (s *MeshService) UpdateMesh(
 		return models.Mesh{}, err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshUpdated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Updates: mesh,
-	}
-
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return models.Mesh{}, errorz.NewInternalError("mesh.updated event handler failed: %v", err)
+	if err := s.fireMeshEvent(ctx, actor, models.MeshUpdated, mesh); err != nil {
+		return models.Mesh{}, err
 	}
 
 	return mesh, nil
@@ -154,17 +136,8 @@ func (s *MeshService) DeleteMesh(
 		return err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshDeleted,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Deletes: models.Mesh{ModelID: modelID},
-	}
-
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return errorz.NewInternalError("mesh.deleted event handler failed: %v", err)
+	if err := s.fireMeshEvent(ctx, actor, models.MeshDeleted, models.Mesh{ModelID: modelID}); err != nil {
+		return err
 	}
 
 	return nil
@@ -212,20 +185,13 @@ func (s *MeshService) CreateNode(
 		return models.Node{}, err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshContentsCreated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Updates: models.Mesh{
-			ModelID: modelID,
-			Nodes:   map[string]models.Node{node.ID: node},
-		},
+	updates := models.Mesh{
+		ModelID: modelID,
+		Nodes:   map[string]models.Node{node.ID: node},
 	}
 
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return models.Node{}, errorz.NewInternalError("mesh-contents.created event handler failed: %v", err)
+	if err := s.fireMeshContentsEvent(ctx, actor, models.MeshContentsCreated, updates, models.Mesh{}); err != nil {
+		return models.Node{}, err
 	}
 
 	return node, nil
@@ -258,20 +224,13 @@ func (s *MeshService) UpdateNode(
 		return models.Node{}, err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshContentsUpdated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Updates: models.Mesh{
-			ModelID: modelID,
-			Nodes:   map[string]models.Node{node.ID: node},
-		},
+	updates := models.Mesh{
+		ModelID: modelID,
+		Nodes:   map[string]models.Node{node.ID: node},
 	}
 
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return models.Node{}, errorz.NewInternalError("mesh-contents.updated event handler failed: %v", err)
+	if err := s.fireMeshContentsEvent(ctx, actor, models.MeshContentsUpdated, updates, models.Mesh{}); err != nil {
+		return models.Node{}, err
 	}
 
 	return node, nil
@@ -297,20 +256,13 @@ func (s *MeshService) DeleteNode(
 		return err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshContentsDeleted,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Deletes: models.Mesh{
-			ModelID: modelID,
-			Nodes:   map[string]models.Node{nodeID: {ID: nodeID}},
-		},
+	deletes := models.Mesh{
+		ModelID: modelID,
+		Nodes:   map[string]models.Node{nodeID: {ID: nodeID}},
 	}
 
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return errorz.NewInternalError("mesh-contents.deleted event handler failed: %v", err)
+	if err := s.fireMeshContentsEvent(ctx, actor, models.MeshContentsDeleted, models.Mesh{}, deletes); err != nil {
+		return err
 	}
 
 	return nil
@@ -362,20 +314,13 @@ func (s *MeshService) CreateRelation(
 		return models.Relation{}, err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshContentsCreated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Updates: models.Mesh{
-			ModelID:   modelID,
-			Relations: map[string]models.Relation{relation.ID: relation},
-		},
+	updates := models.Mesh{
+		ModelID:   modelID,
+		Relations: map[string]models.Relation{relation.ID: relation},
 	}
 
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return models.Relation{}, errorz.NewInternalError("mesh-contents.created event handler failed: %v", err)
+	if err := s.fireMeshContentsEvent(ctx, actor, models.MeshContentsCreated, updates, models.Mesh{}); err != nil {
+		return models.Relation{}, err
 	}
 
 	return relation, nil
@@ -408,20 +353,13 @@ func (s *MeshService) UpdateRelation(
 		return models.Relation{}, err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshContentsCreated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Updates: models.Mesh{
-			ModelID:   modelID,
-			Relations: map[string]models.Relation{relation.ID: relation},
-		},
+	updates := models.Mesh{
+		ModelID:   modelID,
+		Relations: map[string]models.Relation{relation.ID: relation},
 	}
 
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return models.Relation{}, errorz.NewInternalError("mesh-contents.updated event handler failed: %v", err)
+	if err := s.fireMeshContentsEvent(ctx, actor, models.MeshContentsUpdated, updates, models.Mesh{}); err != nil {
+		return models.Relation{}, err
 	}
 
 	return relation, nil
@@ -447,20 +385,13 @@ func (s *MeshService) DeleteRelation(
 		return err
 	}
 
-	event := models.MeshEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.MeshContentsDeleted,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Deletes: models.Mesh{
-			ModelID:   modelID,
-			Relations: map[string]models.Relation{relationID: {ID: relationID}},
-		},
+	deletes := models.Mesh{
+		ModelID:   modelID,
+		Relations: map[string]models.Relation{relationID: {ID: relationID}},
 	}
 
-	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
-		return errorz.NewInternalError("mesh-contents.deleted event handler failed: %v", err)
+	if err := s.fireMeshContentsEvent(ctx, actor, models.MeshContentsDeleted, models.Mesh{}, deletes); err != nil {
+		return err
 	}
 
 	return nil
@@ -487,4 +418,51 @@ func (s *MeshService) GetRelation(
 	}
 
 	return relation, nil
+}
+
+// fireMeshEvent fires a mesh event.
+func (s *MeshService) fireMeshEvent(
+	ctx context.Context,
+	actor access.Actor,
+	eventType models.EventType,
+	mesh models.Mesh,
+) error {
+	event := models.MeshEvent{
+		EventHeader: models.EventHeader{
+			Type:      eventType,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		Updates: mesh,
+	}
+
+	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
+		return errorz.NewInternalError("%s event handler failed: %v", eventType, err)
+	}
+
+	return nil
+}
+
+// fireMeshContentsEvent fires a mesh contents event.
+func (s *MeshService) fireMeshContentsEvent(
+	ctx context.Context,
+	actor access.Actor,
+	eventType models.EventType,
+	updates, deletes models.Mesh,
+) error {
+	event := models.MeshEvent{
+		EventHeader: models.EventHeader{
+			Type:      eventType,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		Updates: updates,
+		Deletes: deletes,
+	}
+
+	if err := s.listener.HandleMeshEvent(ctx, event); err != nil {
+		return errorz.NewInternalError("%s event handler failed: %v", eventType, err)
+	}
+
+	return nil
 }

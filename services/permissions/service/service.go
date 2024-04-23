@@ -70,17 +70,8 @@ func (s *PermissionService) CreateRoleBinding(
 		return permissions.RoleBinding{}, err
 	}
 
-	event := permissions.RoleBindingEvent{
-		EventHeader: permissions.EventHeader{
-			Type:      permissions.RoleBindingCreated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		RoleBinding: roleBinding,
-	}
-
-	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return permissions.RoleBinding{}, errorz.NewInternalError("role-binding.created event handler failed: %v", err)
+	if err := s.fireRoleBindingEvent(ctx, actor, permissions.RoleBindingCreated, roleBinding); err != nil {
+		return permissions.RoleBinding{}, err
 	}
 
 	return roleBinding, nil
@@ -109,17 +100,8 @@ func (s *PermissionService) UpdateRoleBinding(
 		return permissions.RoleBinding{}, err
 	}
 
-	event := permissions.RoleBindingEvent{
-		EventHeader: permissions.EventHeader{
-			Type:      permissions.RoleBindingUpdated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		RoleBinding: roleBinding,
-	}
-
-	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return permissions.RoleBinding{}, errorz.NewInternalError("role-binding.updated event handler failed: %v", err)
+	if err := s.fireRoleBindingEvent(ctx, actor, permissions.RoleBindingUpdated, roleBinding); err != nil {
+		return permissions.RoleBinding{}, err
 	}
 
 	return roleBinding, nil
@@ -137,22 +119,12 @@ func (s *PermissionService) DeleteRoleBinding(
 		return err
 	}
 
-	err := s.store.DeleteRoleBinding(ctx, id)
-	if err != nil {
+	if err := s.store.DeleteRoleBinding(ctx, id); err != nil {
 		return err
 	}
 
-	event := permissions.RoleBindingEvent{
-		EventHeader: permissions.EventHeader{
-			Type:      permissions.RoleBindingDeleted,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		RoleBinding: permissions.RoleBinding{ID: id},
-	}
-
-	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
-		return errorz.NewInternalError("role-binding.deleted event handler failed: %v", err)
+	if err := s.fireRoleBindingEvent(ctx, actor, permissions.RoleBindingDeleted, permissions.RoleBinding{ID: id}); err != nil {
+		return err
 	}
 
 	return nil
@@ -213,4 +185,27 @@ func (s *PermissionService) GetAccessibleResources(
 	}
 
 	return resources, nil
+}
+
+// fireRoleBindingEvent fires a role-binding event.
+func (s *PermissionService) fireRoleBindingEvent(
+	ctx context.Context,
+	actor access.Actor,
+	eventType permissions.EventType,
+	roleBinding permissions.RoleBinding,
+) error {
+	event := permissions.RoleBindingEvent{
+		EventHeader: permissions.EventHeader{
+			Type:      eventType,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		RoleBinding: roleBinding,
+	}
+
+	if err := s.listener.HandlePermissionEvent(ctx, event); err != nil {
+		return errorz.NewInternalError("%s event handler failed: %v", eventType, err)
+	}
+
+	return nil
 }

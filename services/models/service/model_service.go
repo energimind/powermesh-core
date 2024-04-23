@@ -64,17 +64,8 @@ func (s *ModelService) CreateModel(
 		return models.Model{}, err
 	}
 
-	event := models.ModelEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.ModelCreated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Model: model,
-	}
-
-	if err := s.listener.HandleModelEvent(ctx, event); err != nil {
-		return models.Model{}, errorz.NewInternalError("model.created event handler failed: %v", err)
+	if err := s.fireModelEvent(ctx, actor, models.ModelCreated, model); err != nil {
+		return models.Model{}, err
 	}
 
 	return model, nil
@@ -103,17 +94,8 @@ func (s *ModelService) UpdateModel(
 		return models.Model{}, err
 	}
 
-	event := models.ModelEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.ModelUpdated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Model: model,
-	}
-
-	if err := s.listener.HandleModelEvent(ctx, event); err != nil {
-		return models.Model{}, errorz.NewInternalError("model.updated event handler failed: %v", err)
+	if err := s.fireModelEvent(ctx, actor, models.ModelUpdated, model); err != nil {
+		return models.Model{}, err
 	}
 
 	return model, nil
@@ -135,17 +117,8 @@ func (s *ModelService) DeleteModel(
 		return err
 	}
 
-	event := models.ModelEvent{
-		EventHeader: models.EventHeader{
-			Type:      models.ModelDeleted,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		Model: models.Model{ID: id},
-	}
-
-	if err := s.listener.HandleModelEvent(ctx, event); err != nil {
-		return errorz.NewInternalError("model.deleted event handler failed: %v", err)
+	if err := s.fireModelEvent(ctx, actor, models.ModelDeleted, models.Model{ID: id}); err != nil {
+		return err
 	}
 
 	return nil
@@ -193,4 +166,27 @@ func (s *ModelService) GetModelsByIDs(
 	}
 
 	return found, nil
+}
+
+// fireModelEvent fires a model event.
+func (s *ModelService) fireModelEvent(
+	ctx context.Context,
+	actor access.Actor,
+	eventType models.EventType,
+	model models.Model,
+) error {
+	event := models.ModelEvent{
+		EventHeader: models.EventHeader{
+			Type:      eventType,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		Model: model,
+	}
+
+	if err := s.listener.HandleModelEvent(ctx, event); err != nil {
+		return errorz.NewInternalError("%s event handler failed: %v", eventType, err)
+	}
+
+	return nil
 }

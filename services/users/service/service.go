@@ -70,17 +70,8 @@ func (s *UserService) CreateUser(
 		return users.User{}, err
 	}
 
-	event := users.UserEvent{
-		EventHeader: users.EventHeader{
-			Type:      users.UserCreated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		User: user,
-	}
-
-	if err := s.listener.HandleUserEvent(ctx, event); err != nil {
-		return users.User{}, errorz.NewInternalError("user.created event handler failed: %v", err)
+	if err := s.fireUserEvent(ctx, actor, users.UserCreated, user); err != nil {
+		return users.User{}, err
 	}
 
 	return user, nil
@@ -109,17 +100,8 @@ func (s *UserService) UpdateUser(
 		return users.User{}, err
 	}
 
-	event := users.UserEvent{
-		EventHeader: users.EventHeader{
-			Type:      users.UserUpdated,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		User: user,
-	}
-
-	if err := s.listener.HandleUserEvent(ctx, event); err != nil {
-		return users.User{}, errorz.NewInternalError("user.updated event handler failed: %v", err)
+	if err := s.fireUserEvent(ctx, actor, users.UserUpdated, user); err != nil {
+		return users.User{}, err
 	}
 
 	return user, nil
@@ -141,17 +123,8 @@ func (s *UserService) DeleteUser(
 		return err
 	}
 
-	event := users.UserEvent{
-		EventHeader: users.EventHeader{
-			Type:      users.UserDeleted,
-			Actor:     actor,
-			Timestamp: s.now(),
-		},
-		User: users.User{ID: id},
-	}
-
-	if err := s.listener.HandleUserEvent(ctx, event); err != nil {
-		return errorz.NewInternalError("user.deleted event handler failed: %v", err)
+	if err := s.fireUserEvent(ctx, actor, users.UserDeleted, users.User{ID: id}); err != nil {
+		return err
 	}
 
 	return nil
@@ -218,4 +191,27 @@ func (s *UserService) GetUserByUsername(
 	}
 
 	return user, nil
+}
+
+// fireUserEvent fires a user event.
+func (s *UserService) fireUserEvent(
+	ctx context.Context,
+	actor access.Actor,
+	eventType users.EventType,
+	user users.User,
+) error {
+	event := users.UserEvent{
+		EventHeader: users.EventHeader{
+			Type:      eventType,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		User: user,
+	}
+
+	if err := s.listener.HandleUserEvent(ctx, event); err != nil {
+		return errorz.NewInternalError("%s event handler failed: %v", eventType, err)
+	}
+
+	return nil
 }
