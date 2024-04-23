@@ -198,9 +198,16 @@ func (s *testStore) GetAccessibleResources(
 func requireEventFired(t *testing.T, wantEvent permissions.EventType, listener *testListener) {
 	t.Helper()
 
-	require.NotEmpty(t, listener.eventFired)
-	require.Equal(t, wantEvent, listener.eventFired.Type)
-	require.NotEmpty(t, listener.eventFired.Actor)
-	require.NotEmpty(t, listener.eventFired.RoleBinding)
-	require.NotEmpty(t, listener.eventFired.Timestamp)
+	eventFired := listener.eventFired
+
+	require.NotEmpty(t, eventFired)
+
+	rbe, ok := permissions.ExtractRoleBindingEvent(eventFired)
+
+	require.True(t, ok)
+
+	require.Equal(t, wantEvent, rbe.Type)
+	require.NotEmpty(t, rbe.Actor)
+	require.NotEmpty(t, rbe.RoleBinding)
+	require.NotEmpty(t, rbe.Timestamp)
 }

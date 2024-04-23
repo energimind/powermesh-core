@@ -6,42 +6,82 @@ import (
 	"github.com/energimind/powermesh-core/access"
 )
 
-// ModelEventType is the type of event that occurred.
-type ModelEventType string
+// EventType is the type of event that occurred.
+type EventType string
 
-// Model event types.
+// Event types.
 const (
-	ModelCreated ModelEventType = "model.created"
-	ModelUpdated ModelEventType = "model.updated"
-	ModelDeleted ModelEventType = "model.deleted"
+	ModelCreated        EventType = "model.created"
+	ModelUpdated        EventType = "model.updated"
+	ModelDeleted        EventType = "model.deleted"
+	MeshCreated         EventType = "mesh.created"
+	MeshUpdated         EventType = "mesh.updated"
+	MeshDeleted         EventType = "mesh.deleted"
+	MeshContentsCreated EventType = "mesh-contents.created"
+	MeshContentsUpdated EventType = "mesh-contents.updated"
+	MeshContentsDeleted EventType = "mesh-contents.deleted"
 )
 
-// ModelEvent models an event that occurs in the model service.
-type ModelEvent struct {
-	Type      ModelEventType
+// Event models an event that occurs in the models service.
+type Event interface {
+	IsModelEvent() bool
+	IsMeshEvent() bool
+}
+
+// EventHeader models the header of an event.
+type EventHeader struct {
+	Type      EventType
 	Actor     access.Actor
-	Model     Model
 	Timestamp time.Time
 }
 
-// MeshEventType is the type of event that occurred.
-type MeshEventType string
+// ModelEvent models an event that occurs in the models service related to a model.
+type ModelEvent struct {
+	EventHeader
+	Model Model
+}
 
-// Mesh event types.
-const (
-	MeshCreated         MeshEventType = "mesh.created"
-	MeshUpdated         MeshEventType = "mesh.updated"
-	MeshDeleted         MeshEventType = "mesh.deleted"
-	MeshContentsCreated MeshEventType = "mesh-contents.created"
-	MeshContentsUpdated MeshEventType = "mesh-contents.updated"
-	MeshContentsDeleted MeshEventType = "mesh-contents.deleted"
-)
+// IsModelEvent implements the Event interface.
+func (ModelEvent) IsModelEvent() bool {
+	return true
+}
 
-// MeshEvent models an event that occurs in the mesh service.
+// IsMeshEvent implements the Event interface.
+func (ModelEvent) IsMeshEvent() bool {
+	return false
+}
+
+// MeshEvent models an event that occurs in the models service related to a mesh.
 type MeshEvent struct {
-	Type      MeshEventType
-	Actor     access.Actor
-	Updates   Mesh
-	Deletes   Mesh
-	Timestamp time.Time
+	EventHeader
+	Updates Mesh
+	Deletes Mesh
+}
+
+// IsModelEvent implements the Event interface.
+func (MeshEvent) IsModelEvent() bool {
+	return false
+}
+
+// IsMeshEvent implements the Event interface.
+func (MeshEvent) IsMeshEvent() bool {
+	return true
+}
+
+// ExtractModelEvent extracts a model event from an event.
+func ExtractModelEvent(e Event) (ModelEvent, bool) {
+	if me, ok := e.(ModelEvent); ok {
+		return me, true
+	}
+
+	return ModelEvent{}, false
+}
+
+// ExtractMeshEvent extracts a mesh event from an event.
+func ExtractMeshEvent(e Event) (MeshEvent, bool) {
+	if me, ok := e.(MeshEvent); ok {
+		return me, true
+	}
+
+	return MeshEvent{}, false
 }

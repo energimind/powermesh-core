@@ -18,7 +18,7 @@ type modelStore interface {
 	GetModelsByIDs(ctx context.Context, ids []string) ([]models.Model, error)
 }
 
-// modelListener defines the external model event listener.
+// modelListener defines the external model event modelListener.
 type modelListener interface {
 	HandleModelEvent(ctx context.Context, event models.ModelEvent) error
 }
@@ -64,12 +64,16 @@ func (s *ModelService) CreateModel(
 		return models.Model{}, err
 	}
 
-	if err := s.listener.HandleModelEvent(ctx, models.ModelEvent{
-		Type:      models.ModelCreated,
-		Actor:     actor,
-		Model:     model,
-		Timestamp: s.now(),
-	}); err != nil {
+	event := models.ModelEvent{
+		EventHeader: models.EventHeader{
+			Type:      models.ModelCreated,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		Model: model,
+	}
+
+	if err := s.listener.HandleModelEvent(ctx, event); err != nil {
 		return models.Model{}, errorz.NewInternalError("model.created event handler failed: %v", err)
 	}
 
@@ -99,12 +103,16 @@ func (s *ModelService) UpdateModel(
 		return models.Model{}, err
 	}
 
-	if err := s.listener.HandleModelEvent(ctx, models.ModelEvent{
-		Type:      models.ModelUpdated,
-		Actor:     actor,
-		Model:     model,
-		Timestamp: s.now(),
-	}); err != nil {
+	event := models.ModelEvent{
+		EventHeader: models.EventHeader{
+			Type:      models.ModelUpdated,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		Model: model,
+	}
+
+	if err := s.listener.HandleModelEvent(ctx, event); err != nil {
 		return models.Model{}, errorz.NewInternalError("model.updated event handler failed: %v", err)
 	}
 
@@ -127,12 +135,16 @@ func (s *ModelService) DeleteModel(
 		return err
 	}
 
-	if err := s.listener.HandleModelEvent(ctx, models.ModelEvent{
-		Type:      models.ModelDeleted,
-		Actor:     actor,
-		Model:     models.Model{ID: id},
-		Timestamp: s.now(),
-	}); err != nil {
+	event := models.ModelEvent{
+		EventHeader: models.EventHeader{
+			Type:      models.ModelDeleted,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		Model: models.Model{ID: id},
+	}
+
+	if err := s.listener.HandleModelEvent(ctx, event); err != nil {
 		return errorz.NewInternalError("model.deleted event handler failed: %v", err)
 	}
 

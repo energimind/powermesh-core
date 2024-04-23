@@ -70,12 +70,16 @@ func (s *UserService) CreateUser(
 		return users.User{}, err
 	}
 
-	if err := s.listener.HandleUserEvent(ctx, users.Event{
-		Type:      users.UserCreated,
-		Actor:     actor,
-		User:      user,
-		Timestamp: s.now(),
-	}); err != nil {
+	event := users.UserEvent{
+		EventHeader: users.EventHeader{
+			Type:      users.UserCreated,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		User: user,
+	}
+
+	if err := s.listener.HandleUserEvent(ctx, event); err != nil {
 		return users.User{}, errorz.NewInternalError("user.created event handler failed: %v", err)
 	}
 
@@ -105,12 +109,16 @@ func (s *UserService) UpdateUser(
 		return users.User{}, err
 	}
 
-	if err := s.listener.HandleUserEvent(ctx, users.Event{
-		Type:      users.UserUpdated,
-		Actor:     actor,
-		User:      user,
-		Timestamp: s.now(),
-	}); err != nil {
+	event := users.UserEvent{
+		EventHeader: users.EventHeader{
+			Type:      users.UserUpdated,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		User: user,
+	}
+
+	if err := s.listener.HandleUserEvent(ctx, event); err != nil {
 		return users.User{}, errorz.NewInternalError("user.updated event handler failed: %v", err)
 	}
 
@@ -133,12 +141,16 @@ func (s *UserService) DeleteUser(
 		return err
 	}
 
-	if err := s.listener.HandleUserEvent(ctx, users.Event{
-		Type:      users.UserDeleted,
-		Actor:     actor,
-		User:      users.User{ID: id},
-		Timestamp: s.now(),
-	}); err != nil {
+	event := users.UserEvent{
+		EventHeader: users.EventHeader{
+			Type:      users.UserDeleted,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
+		User: users.User{ID: id},
+	}
+
+	if err := s.listener.HandleUserEvent(ctx, event); err != nil {
 		return errorz.NewInternalError("user.deleted event handler failed: %v", err)
 	}
 

@@ -19,7 +19,7 @@ func TestMeshService_CreateMesh(t *testing.T) {
 		data          models.MeshData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -35,7 +35,7 @@ func TestMeshService_CreateMesh(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			data:          validMeshData,
@@ -80,7 +80,7 @@ func TestMeshService_UpdateMesh(t *testing.T) {
 		data          models.MeshData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -96,7 +96,7 @@ func TestMeshService_UpdateMesh(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			data:          validMeshData,
@@ -140,7 +140,7 @@ func TestMeshService_DeleteMesh(t *testing.T) {
 		modelID       string
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -154,7 +154,7 @@ func TestMeshService_DeleteMesh(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			listenerError: true,
@@ -241,7 +241,7 @@ func TestMeshService_CreateNode(t *testing.T) {
 		data          models.NodeData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -262,7 +262,7 @@ func TestMeshService_CreateNode(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			data:          validNodeData,
@@ -308,7 +308,7 @@ func TestMeshService_UpdateNode(t *testing.T) {
 		data          models.NodeData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -337,7 +337,7 @@ func TestMeshService_UpdateNode(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			nodeID:        validNodeID,
@@ -384,7 +384,7 @@ func TestMeshService_DeleteNode(t *testing.T) {
 		nodeID        string
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -405,7 +405,7 @@ func TestMeshService_DeleteNode(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			nodeID:        validNodeID,
@@ -504,7 +504,7 @@ func TestMeshService_CreateRelation(t *testing.T) {
 		data          models.RelationData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -525,7 +525,7 @@ func TestMeshService_CreateRelation(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			data:          validRelationData,
@@ -570,7 +570,7 @@ func TestMeshService_UpdateRelation(t *testing.T) {
 		data          models.RelationData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -599,7 +599,7 @@ func TestMeshService_UpdateRelation(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			relationID:    validRelationID,
@@ -645,7 +645,7 @@ func TestMeshService_DeleteRelation(t *testing.T) {
 		relationID    string
 		storeError    bool
 		listenerError bool
-		wantEvent     models.MeshEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelID": {
@@ -666,7 +666,7 @@ func TestMeshService_DeleteRelation(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			modelID:       validModelID,
 			relationID:    validRelationID,

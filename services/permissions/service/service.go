@@ -70,10 +70,12 @@ func (s *PermissionService) CreateRoleBinding(
 		return permissions.RoleBinding{}, err
 	}
 
-	event := permissions.Event{
-		Type:        permissions.RoleBindingCreated,
-		Actor:       actor,
-		Timestamp:   s.now(),
+	event := permissions.RoleBindingEvent{
+		EventHeader: permissions.EventHeader{
+			Type:      permissions.RoleBindingCreated,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
 		RoleBinding: roleBinding,
 	}
 
@@ -107,10 +109,12 @@ func (s *PermissionService) UpdateRoleBinding(
 		return permissions.RoleBinding{}, err
 	}
 
-	event := permissions.Event{
-		Type:        permissions.RoleBindingUpdated,
-		Actor:       actor,
-		Timestamp:   s.now(),
+	event := permissions.RoleBindingEvent{
+		EventHeader: permissions.EventHeader{
+			Type:      permissions.RoleBindingUpdated,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
 		RoleBinding: roleBinding,
 	}
 
@@ -138,10 +142,12 @@ func (s *PermissionService) DeleteRoleBinding(
 		return err
 	}
 
-	event := permissions.Event{
-		Type:        permissions.RoleBindingDeleted,
-		Actor:       actor,
-		Timestamp:   s.now(),
+	event := permissions.RoleBindingEvent{
+		EventHeader: permissions.EventHeader{
+			Type:      permissions.RoleBindingDeleted,
+			Actor:     actor,
+			Timestamp: s.now(),
+		},
 		RoleBinding: permissions.RoleBinding{ID: id},
 	}
 

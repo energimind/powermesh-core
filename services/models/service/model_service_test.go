@@ -18,7 +18,7 @@ func TestModelService_CreateModel(t *testing.T) {
 		data          models.ModelData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.ModelEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-modelData": {
@@ -32,7 +32,7 @@ func TestModelService_CreateModel(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			data:          validModelData,
 			listenerError: true,
@@ -82,7 +82,7 @@ func TestModelService_UpdateModel(t *testing.T) {
 		data          models.ModelData
 		storeError    bool
 		listenerError bool
-		wantEvent     models.ModelEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-id": {
@@ -104,7 +104,7 @@ func TestModelService_UpdateModel(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			id:            validModelID,
 			data:          validModelData,
@@ -155,7 +155,7 @@ func TestModelService_DeleteModel(t *testing.T) {
 		id            string
 		storeError    bool
 		listenerError bool
-		wantEvent     models.ModelEventType
+		wantEvent     models.EventType
 		wantErr       error
 	}{
 		"invalid-id": {
@@ -169,7 +169,7 @@ func TestModelService_DeleteModel(t *testing.T) {
 			storeError: true,
 			wantErr:    errorz.StoreError{},
 		},
-		"listener-error": {
+		"modelListener-error": {
 			actor:         adminActor,
 			id:            validModelID,
 			listenerError: true,

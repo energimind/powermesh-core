@@ -196,9 +196,16 @@ func (s *testStore) GetUserByUsername(
 func requireEventFired(t *testing.T, wantEvent users.EventType, listener *testListener) {
 	t.Helper()
 
-	require.NotEmpty(t, listener.eventFired)
-	require.Equal(t, wantEvent, listener.eventFired.Type)
-	require.NotEmpty(t, listener.eventFired.Actor)
-	require.NotEmpty(t, listener.eventFired.User)
-	require.NotEmpty(t, listener.eventFired.Timestamp)
+	eventFired := listener.eventFired
+
+	require.NotEmpty(t, eventFired)
+
+	ue, ok := users.ExtractUserEvent(eventFired)
+
+	require.True(t, ok)
+
+	require.Equal(t, wantEvent, ue.Type)
+	require.NotEmpty(t, ue.Actor)
+	require.NotEmpty(t, ue.User)
+	require.NotEmpty(t, ue.Timestamp)
 }

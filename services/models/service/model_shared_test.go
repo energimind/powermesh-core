@@ -162,7 +162,7 @@ func (s *testModelStore) GetModelsByIDs(
 	return found, nil
 }
 
-func requireModelEventFired(t *testing.T, wantEvent models.ModelEventType, listener *testModelListener) {
+func requireModelEventFired(t *testing.T, wantEvent models.EventType, listener *testModelListener) {
 	t.Helper()
 
 	require.NotEmpty(t, listener.eventFired)
