@@ -19,7 +19,7 @@ func TestDeleteOne(t *testing.T) {
 			},
 		}
 
-		require.NoError(t, DeleteOne[person](coll).Exec(context.Background(), testID))
+		require.NoError(t, DeleteOne(coll).Exec(context.Background(), testID))
 	})
 
 	t.Run("not-found", func(t *testing.T) {
@@ -31,7 +31,7 @@ func TestDeleteOne(t *testing.T) {
 		}
 
 		require.ErrorContains(t,
-			DeleteOne[person](coll).Exec(context.Background(), testID),
+			DeleteOne(coll).Exec(context.Background(), testID),
 			"not found")
 	})
 
@@ -44,7 +44,7 @@ func TestDeleteOne(t *testing.T) {
 		}
 
 		require.ErrorContains(t,
-			DeleteOne[person](coll).Exec(context.Background(), testID),
+			DeleteOne(coll).Exec(context.Background(), testID),
 			"forced error")
 	})
 }

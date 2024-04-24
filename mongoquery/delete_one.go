@@ -7,14 +7,14 @@ import (
 )
 
 // DeleteOne creates a new DeleteOneQuery.
-func DeleteOne[D any](coll collection) DeleteOneQuery[D] {
-	return DeleteOneQuery[D]{
+func DeleteOne(coll collection) DeleteOneQuery {
+	return DeleteOneQuery{
 		coll: coll,
 	}
 }
 
 // DeleteOneQuery deletes a single document from the collection.
-type DeleteOneQuery[D any] struct {
+type DeleteOneQuery struct {
 	coll collection
 }
 
@@ -22,7 +22,7 @@ type DeleteOneQuery[D any] struct {
 // It deletes the document from the collection.
 // It accepts an ID or a filter as input.
 // It returns an error if the operation failed.
-func (q DeleteOneQuery[D]) Exec(ctx context.Context, idOrFilter any) error {
+func (q DeleteOneQuery) Exec(ctx context.Context, idOrFilter any) error {
 	qFilter := buildFilter(idOrFilter)
 
 	res, err := q.coll.DeleteOne(ctx, qFilter)
