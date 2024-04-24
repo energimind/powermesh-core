@@ -45,6 +45,10 @@ func fromDBPerson(p dbPerson) person {
 	return person(p)
 }
 
+func projectName(p dbPerson) string {
+	return p.Name
+}
+
 type forcedError struct{}
 
 func (e forcedError) Error() string {

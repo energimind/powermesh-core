@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -28,6 +29,23 @@ func TestFindMany(t *testing.T) {
 
 		require.NoError(t, err)
 		require.NotNil(t, rsp)
+	})
+
+	t.Run("success-with-projection", func(t *testing.T) {
+		coll := &mockCollection{
+			t: t,
+			find: func() (*mongo.Cursor, error) {
+				documents, err := mongo.NewCursorFromDocuments([]any{bson.M{"name": "John"}}, nil, nil)
+
+				return documents, err
+			},
+		}
+
+		rsp, err := FindMany(coll, projectName).WithProjection("name").Exec(context.Background(), filter)
+
+		require.NoError(t, err)
+		require.NotNil(t, rsp)
+		require.Equal(t, []string{"John"}, rsp)
 	})
 
 	t.Run("find-error", func(t *testing.T) {
