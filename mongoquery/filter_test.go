@@ -45,7 +45,7 @@ func TestFilter(t *testing.T) {
 	})
 
 	t.Run("IN", func(t *testing.T) {
-		f := Filter{}.IN("key", 1, 2, 3)
+		f := Filter{}.IN("key", []any{1, 2, 3})
 
 		require.Equal(t, Filter{"key": bson.M{"$in": []any{1, 2, 3}}}, f)
 	})

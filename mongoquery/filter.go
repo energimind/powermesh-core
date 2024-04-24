@@ -50,7 +50,7 @@ func (f Filter) LTE(key string, value any) Filter {
 }
 
 // IN adds an in filter.
-func (f Filter) IN(key string, values ...any) Filter {
+func (f Filter) IN(key string, values any) Filter {
 	f[key] = bson.M{"$in": values}
 
 	return f
