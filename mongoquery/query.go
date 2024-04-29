@@ -25,3 +25,16 @@ type collection interface {
 
 // mapper is a function that maps a value of type t to a value of type D.
 type mapper[F, T any] func(F) T
+
+// defaultKey is the default key used to identify documents in a collection.
+const defaultKey = "id"
+
+// resolveKey returns the key to use for the query.
+// It returns the default key if the input key is empty.
+func resolveKey(key string) string {
+	if key == "" {
+		return defaultKey
+	}
+
+	return key
+}

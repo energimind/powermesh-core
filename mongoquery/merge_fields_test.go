@@ -23,7 +23,7 @@ func TestMergeFields(t *testing.T) {
 			},
 		}
 
-		require.NoError(t, MergeFields(coll).Exec(context.Background(), testID, testFields))
+		require.NoError(t, MergeFields(coll).Key("id").Exec(context.Background(), testID, testFields))
 	})
 
 	t.Run("not-found", func(t *testing.T) {

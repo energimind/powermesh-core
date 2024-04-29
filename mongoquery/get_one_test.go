@@ -21,7 +21,7 @@ func TestGetOne(t *testing.T) {
 			},
 		}
 
-		rsp, err := GetOne(coll, fromDBPerson).Exec(context.Background(), testID)
+		rsp, err := GetOne(coll, fromDBPerson).Key("id").Exec(context.Background(), testID)
 
 		require.NoError(t, err)
 		require.Equal(t, testDomainPerson, rsp)

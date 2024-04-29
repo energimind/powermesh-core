@@ -19,7 +19,7 @@ func TestDeleteOne(t *testing.T) {
 			},
 		}
 
-		require.NoError(t, DeleteOne(coll).Exec(context.Background(), testID))
+		require.NoError(t, DeleteOne(coll).Key("id").Exec(context.Background(), testID))
 	})
 
 	t.Run("not-found", func(t *testing.T) {

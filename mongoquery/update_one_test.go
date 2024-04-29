@@ -20,7 +20,7 @@ func TestUpdateOne(t *testing.T) {
 			},
 		}
 
-		require.NoError(t, UpdateOne(coll, toDBPerson).Exec(context.Background(), testID, testDomainPerson))
+		require.NoError(t, UpdateOne(coll, toDBPerson).Key("id").Exec(context.Background(), testID, testDomainPerson))
 	})
 
 	t.Run("not-found", func(t *testing.T) {

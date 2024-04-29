@@ -19,6 +19,15 @@ func UpdateOne[D, T any](coll collection, mapper mapper[T, D]) UpdateOneQuery[D,
 type UpdateOneQuery[D, T any] struct {
 	coll   collection
 	mapper mapper[T, D]
+	key    string
+}
+
+// Key sets the key to use for the query.
+// It returns the query itself.
+func (q UpdateOneQuery[D, T]) Key(key string) UpdateOneQuery[D, T] {
+	q.key = key
+
+	return q
 }
 
 // Exec executes the query.
@@ -26,7 +35,7 @@ type UpdateOneQuery[D, T any] struct {
 // It returns an error if the operation failed.
 func (q UpdateOneQuery[D, T]) Exec(ctx context.Context, id any, value T) error {
 	qValue := q.mapper(value)
-	qFilter := bson.M{"id": id}
+	qFilter := bson.M{resolveKey(q.key): id}
 	qUpdate := bson.M{"$set": qValue}
 
 	res, err := q.coll.UpdateOne(ctx, qFilter, qUpdate)

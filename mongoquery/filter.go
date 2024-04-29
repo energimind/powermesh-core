@@ -61,7 +61,7 @@ func (f Filter) toBSON() bson.M {
 	return bson.M(f)
 }
 
-func buildFilter(idOrFilter any) bson.M {
+func buildFilter(key string, idOrFilter any) bson.M {
 	if f, isFilter := idOrFilter.(Filter); isFilter {
 		return f.toBSON()
 	}
@@ -70,5 +70,5 @@ func buildFilter(idOrFilter any) bson.M {
 		return b
 	}
 
-	return bson.M{"id": idOrFilter}
+	return bson.M{resolveKey(key): idOrFilter}
 }

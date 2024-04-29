@@ -16,6 +16,15 @@ func DeleteOne(coll collection) DeleteOneQuery {
 // DeleteOneQuery deletes a single document from the collection.
 type DeleteOneQuery struct {
 	coll collection
+	key  string
+}
+
+// Key sets the key to use for the query.
+// It returns the query itself.
+func (q DeleteOneQuery) Key(key string) DeleteOneQuery {
+	q.key = key
+
+	return q
 }
 
 // Exec executes the query.
@@ -23,7 +32,7 @@ type DeleteOneQuery struct {
 // It accepts an ID or a filter as input.
 // It returns an error if the operation failed.
 func (q DeleteOneQuery) Exec(ctx context.Context, idOrFilter any) error {
-	qFilter := buildFilter(idOrFilter)
+	qFilter := buildFilter(q.key, idOrFilter)
 
 	res, err := q.coll.DeleteOne(ctx, qFilter)
 	if err != nil {

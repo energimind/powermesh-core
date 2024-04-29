@@ -63,25 +63,25 @@ func Test_buildFilter(t *testing.T) {
 	t.Parallel()
 
 	t.Run("filter", func(t *testing.T) {
-		f := buildFilter(Filter{"key1": "value1", "key2": "value2"})
+		f := buildFilter("id", Filter{"key1": "value1", "key2": "value2"})
 
 		require.Equal(t, bson.M{"key1": "value1", "key2": "value2"}, f)
 	})
 
 	t.Run("bson", func(t *testing.T) {
-		f := buildFilter(bson.M{"key1": "value1", "key2": "value2"})
+		f := buildFilter("id", bson.M{"key1": "value1", "key2": "value2"})
 
 		require.Equal(t, bson.M{"key1": "value1", "key2": "value2"}, f)
 	})
 
 	t.Run("integer", func(t *testing.T) {
-		f := buildFilter(42)
+		f := buildFilter("id", 42)
 
 		require.Equal(t, bson.M{"id": 42}, f)
 	})
 
 	t.Run("other", func(t *testing.T) {
-		f := buildFilter("someId")
+		f := buildFilter("id", "someId")
 
 		require.Equal(t, bson.M{"id": "someId"}, f)
 	})

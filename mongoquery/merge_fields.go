@@ -17,13 +17,22 @@ func MergeFields(coll collection) MergeFieldsQuery {
 // MergeFieldsQuery is a query to update one or more fields in a document.
 type MergeFieldsQuery struct {
 	coll collection
+	key  string
+}
+
+// Key sets the key to use for the query.
+// It returns the query itself.
+func (q MergeFieldsQuery) Key(key string) MergeFieldsQuery {
+	q.key = key
+
+	return q
 }
 
 // Exec executes the query.
 // It updates the fields in the document.
 // It returns an error if the operation failed.
 func (q MergeFieldsQuery) Exec(ctx context.Context, id any, fields map[string]any) error {
-	qFilter := bson.M{"id": id}
+	qFilter := bson.M{resolveKey(q.key): id}
 	qUpdate := bson.M{"$set": bson.M(fields)}
 
 	res, err := q.coll.UpdateOne(ctx, qFilter, qUpdate)

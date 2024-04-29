@@ -20,6 +20,15 @@ func GetOne[D, T any](coll collection, mapper mapper[D, T]) GetOneQuery[D, T] {
 type GetOneQuery[D, T any] struct {
 	coll   collection
 	mapper mapper[D, T]
+	key    string
+}
+
+// Key sets the key to use for the query.
+// It returns the query itself.
+func (q GetOneQuery[D, T]) Key(key string) GetOneQuery[D, T] {
+	q.key = key
+
+	return q
 }
 
 // Exec executes the query.
@@ -27,7 +36,7 @@ type GetOneQuery[D, T any] struct {
 // It accepts an ID or a filter as input.
 // It returns an error if the operation failed.
 func (q GetOneQuery[D, T]) Exec(ctx context.Context, idOrFilter any) (T, error) { //nolint:ireturn
-	qFilter := buildFilter(idOrFilter)
+	qFilter := buildFilter(q.key, idOrFilter)
 
 	var qValue D
 
