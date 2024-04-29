@@ -59,7 +59,7 @@ func TestModelStore_DeleteModel(t *testing.T) {
 
 			_, err := store.GetModel(ctx, model.ID)
 
-			require.Error(t, err)
+			require.IsType(t, errorz.NotFoundError{}, err)
 		})
 	})
 }

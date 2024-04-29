@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	collModels = "models"
-	fieldID    = "id"
+	collModels   = "models"
+	fieldModelID = "id"
 )
 
 // ModelStore is a MongoDB implementation of the model store.
@@ -60,5 +60,5 @@ func (s *ModelStore) GetModel(ctx context.Context, id string) (models.Model, err
 //
 //nolint:wrapcheck // see comment in the header
 func (s *ModelStore) GetModelsByIDs(ctx context.Context, ids []string) ([]models.Model, error) {
-	return q.FindMany(s.models, fromStoreModel).Exec(ctx, q.Filter{}.IN(fieldID, ids))
+	return q.FindMany(s.models, fromStoreModel).Exec(ctx, q.Filter{}.IN(fieldModelID, ids))
 }
