@@ -57,6 +57,7 @@ func (e forcedError) Error() string {
 
 type mockCollection struct {
 	t         *testing.T
+	caller    string
 	insertOne func() (*mongo.InsertOneResult, error)
 	updateOne func() (*mongo.UpdateResult, error)
 	deleteOne func() (*mongo.DeleteResult, error)
@@ -89,8 +90,16 @@ func (c *mockCollection) UpdateOne(_ context.Context, filter interface{}, update
 	fm := filter.(bson.M)
 	um := update.(bson.M)
 
-	require.Equal(c.t, testID, fm["id"])
-	require.Equal(c.t, bson.M{"$set": testDBPerson}, um)
+	switch c.caller {
+	case "MergeFields":
+		require.Equal(c.t, bson.M{"id": testID}, fm)
+		require.Equal(c.t, bson.M{"$set": bson.M{"name": "John", "age": 30}}, um)
+	case "UpdateOne":
+		require.Equal(c.t, bson.M{"id": testID}, fm)
+		require.Equal(c.t, bson.M{"$set": testDBPerson}, um)
+	default:
+		require.Fail(c.t, "unexpected caller: %s", c.caller)
+	}
 
 	if c.updateOne == nil {
 		return nil, errors.New("updateOne not implemented")
