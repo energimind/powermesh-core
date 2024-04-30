@@ -20,6 +20,7 @@ type meshStore interface {
 type meshOperations interface {
 	CreateMesh(ctx context.Context, mesh models.Mesh) error
 	UpdateMesh(ctx context.Context, mesh models.Mesh) error
+	MergeMesh(ctx context.Context, mesh models.Mesh) error
 	DeleteMesh(ctx context.Context, modelID string) error
 	GetMesh(ctx context.Context, modelID string) (models.Mesh, error)
 }
@@ -121,6 +122,32 @@ func (s *MeshService) UpdateMesh(
 	}
 
 	return mesh, nil
+}
+
+// MergeMesh implements the models.MeshService interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshService) MergeMesh(
+	ctx context.Context,
+	actor access.Actor,
+	modelID string,
+	data models.MeshData,
+) error {
+	if err := validateModelID(modelID); err != nil {
+		return err
+	}
+
+	mesh := meshFromData(modelID, data)
+
+	if err := s.store.MergeMesh(ctx, mesh); err != nil {
+		return err
+	}
+
+	if err := s.fireMeshEvent(ctx, actor, models.MeshUpdated, mesh); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // DeleteMesh implements the models.MeshService interface.

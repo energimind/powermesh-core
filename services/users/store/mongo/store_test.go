@@ -37,7 +37,7 @@ func TestUserStore_UpdateUser(t *testing.T) {
 			updatedUser, err := store.GetUser(ctx, user.ID)
 
 			require.NoError(t, err)
-			require.Equal(t, user.Username, updatedUser.Username)
+			require.Equal(t, user, updatedUser)
 		})
 	})
 }

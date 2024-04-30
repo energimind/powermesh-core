@@ -135,6 +135,21 @@ func (s *testMeshStore) UpdateMesh(
 	return nil
 }
 
+func (s *testMeshStore) MergeMesh(
+	_ context.Context,
+	mesh models.Mesh,
+) error {
+	s.t.Helper()
+
+	if s.forcedError != nil {
+		return s.forcedError
+	}
+
+	require.Equal(s.t, validMesh, mesh)
+
+	return nil
+}
+
 func (s *testMeshStore) DeleteMesh(
 	_ context.Context,
 	modelID string,

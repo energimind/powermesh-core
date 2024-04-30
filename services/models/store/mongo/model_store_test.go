@@ -37,7 +37,7 @@ func TestModelStore_UpdateModel(t *testing.T) {
 			updatedModel, err := store.GetModel(ctx, model.ID)
 
 			require.NoError(t, err)
-			require.Equal(t, model.Name, updatedModel.Name)
+			require.Equal(t, model, updatedModel)
 		})
 	})
 }

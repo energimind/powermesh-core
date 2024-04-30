@@ -132,6 +132,65 @@ func TestMeshService_UpdateMesh(t *testing.T) {
 	}
 }
 
+func TestMeshService_MergeMesh(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		actor         access.Actor
+		modelID       string
+		data          models.MeshData
+		storeError    bool
+		listenerError bool
+		wantEvent     models.EventType
+		wantErr       error
+	}{
+		"invalid-modelID": {
+			actor:   adminActor,
+			modelID: "",
+			data:    validMeshData,
+			wantErr: errorz.ValidationError{},
+		},
+		"store-error": {
+			actor:      adminActor,
+			modelID:    validModelID,
+			data:       validMeshData,
+			storeError: true,
+			wantErr:    errorz.StoreError{},
+		},
+		"modelListener-error": {
+			actor:         adminActor,
+			modelID:       validModelID,
+			data:          validMeshData,
+			listenerError: true,
+			wantErr:       errorz.InternalError{},
+		},
+		"success": {
+			actor:     adminActor,
+			modelID:   validModelID,
+			data:      validMeshData,
+			wantEvent: models.MeshUpdated,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newTestMeshStore(t, test.storeError)
+			tl := newTestMeshListener(test.listenerError)
+
+			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+
+			err := svc.MergeMesh(context.Background(), test.actor, test.modelID, test.data)
+
+			if test.wantErr != nil {
+				require.Error(t, err)
+				require.IsType(t, test.wantErr, err)
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
 func TestMeshService_DeleteMesh(t *testing.T) {
 	t.Parallel()
 

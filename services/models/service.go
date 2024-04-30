@@ -32,6 +32,7 @@ type MeshService interface {
 type meshOperations interface {
 	CreateMesh(ctx context.Context, actor access.Actor, modelID string, data MeshData) (Mesh, error)
 	UpdateMesh(ctx context.Context, actor access.Actor, modelID string, data MeshData) (Mesh, error)
+	MergeMesh(ctx context.Context, actor access.Actor, modelID string, data MeshData) error
 	DeleteMesh(ctx context.Context, actor access.Actor, modelID string) error
 	GetMesh(ctx context.Context, modelID string) (Mesh, error)
 }

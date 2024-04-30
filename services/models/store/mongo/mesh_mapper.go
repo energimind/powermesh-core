@@ -105,3 +105,23 @@ func fromStoreRelation(r storeRelation) models.Relation {
 		Props: r.Props,
 	}
 }
+
+// mergeMeshUpdate returns a MongoDB update document for a mesh.
+// The update document contains only the fields that are set in the mesh.
+func mergeMeshUpdate(m models.Mesh) map[string]any {
+	update := map[string]any{}
+
+	if m.Code != "" {
+		update[fieldCode] = m.Code
+	}
+
+	if len(m.Nodes) > 0 {
+		update[fieldNodes] = toStoreNodes(m.Nodes)
+	}
+
+	if len(m.Relations) > 0 {
+		update[fieldRelations] = toStoreRelations(m.Relations)
+	}
+
+	return update
+}

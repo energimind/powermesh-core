@@ -39,7 +39,7 @@ func TestPermissionStore_UpdateRoleBinding(t *testing.T) {
 			updatedRoleBinding, err := store.GetRoleBinding(ctx, roleBinding.ID)
 
 			require.NoError(t, err)
-			require.Equal(t, roleBinding.Role, updatedRoleBinding.Role)
+			require.Equal(t, roleBinding, updatedRoleBinding)
 		})
 	})
 }

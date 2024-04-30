@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_toStoreModel(t *testing.T) {
+func Test_modelMappers(t *testing.T) {
 	t.Parallel()
 
 	require.Equal(t, validStoreModel, toStoreModel(validModelModel))

@@ -30,14 +30,43 @@ func TestMeshStore_UpdateMesh(t *testing.T) {
 
 			require.NoError(t, store.CreateMesh(ctx, mesh))
 
+			newNode := testNode()
+			newNode.Code = "new-node"
+
 			mesh.Code = "new-code"
+			mesh.Nodes[newNode.ID] = newNode
 
 			require.NoError(t, store.UpdateMesh(ctx, mesh))
 
 			updatedMesh, err := store.GetMesh(ctx, mesh.ModelID)
 
 			require.NoError(t, err)
-			require.Equal(t, mesh.Code, updatedMesh.Code)
+			require.Equal(t, mesh, updatedMesh)
+		})
+	})
+}
+
+func TestMeshStore_MergeMesh(t *testing.T) {
+	t.Parallel()
+
+	withMeshStore(t, func(t *testing.T, ctx context.Context, store *mongo.MeshStore) {
+		t.Run("not-found", func(t *testing.T) {
+			require.IsType(t, errorz.NotFoundError{}, store.MergeMesh(ctx, testMesh()))
+		})
+
+		t.Run("success", func(t *testing.T) {
+			mesh := testMesh()
+
+			require.NoError(t, store.CreateMesh(ctx, mesh))
+
+			mesh.Code = "new-code"
+
+			require.NoError(t, store.MergeMesh(ctx, mesh))
+
+			updatedMesh, err := store.GetMesh(ctx, mesh.ModelID)
+
+			require.NoError(t, err)
+			require.Equal(t, mesh, updatedMesh)
 		})
 	})
 }

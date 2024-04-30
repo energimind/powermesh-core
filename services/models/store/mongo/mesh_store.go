@@ -42,6 +42,13 @@ func (s *MeshStore) UpdateMesh(ctx context.Context, mesh models.Mesh) error {
 	return q.UpdateOne(s.meshes, toStoreMesh).Key(meshKey).Exec(ctx, mesh.ModelID, mesh)
 }
 
+// MergeMesh implements the mesh store interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshStore) MergeMesh(ctx context.Context, mesh models.Mesh) error {
+	return q.MergeFields(s.meshes).Key(meshKey).Exec(ctx, mesh.ModelID, mergeMeshUpdate(mesh))
+}
+
 // DeleteMesh implements the mesh store interface.
 //
 //nolint:wrapcheck // see comment in the header
