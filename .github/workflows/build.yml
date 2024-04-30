@@ -19,7 +19,12 @@ jobs:
         with:
           go-version: stable
       - name: Run tests
-        run: go test -count=1 -race ./...
+        run: go test -count=1 -race ./... -coverprofile ./coverage.txt
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: energimind/powermesh-core
   lint:
     runs-on: ubuntu-latest
     steps:
