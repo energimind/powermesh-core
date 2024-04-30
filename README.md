@@ -1,8 +1,9 @@
 # Powermesh-Core
 
 [![Build Status](https://github.com/energimind/powermesh-core/actions/workflows/build.yml/badge.svg)](https://github.com/energimind/powermesh-core/actions)
-[![GitHub release](https://img.shields.io/github/v/release/energimind/powermesh-core)](https://github.com/energimind/powermesh-core/releases/latest)
+[![codecov](https://codecov.io/gh/energimind/powermesh-core/graph/badge.svg?token=BBCI6HU29E)](https://codecov.io/gh/energimind/powermesh-core)
 [![Go Report Card](https://goreportcard.com/badge/github.com/energimind/powermesh-core)](https://goreportcard.com/report/github.com/energimind/powermesh-core)
+[![GitHub release](https://img.shields.io/github/v/release/energimind/powermesh-core)](https://github.com/energimind/powermesh-core/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/energimind/powermesh-core)](https://github.com/energimind/powermesh-core/blob/master/LICENSE)
 
 This repository contains the core components of the Powermesh project.
