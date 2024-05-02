@@ -62,3 +62,31 @@ func (s *MeshStore) DeleteMesh(ctx context.Context, modelID string) error {
 func (s *MeshStore) GetMesh(ctx context.Context, modelID string) (models.Mesh, error) {
 	return q.GetOne(s.meshes, fromStoreMesh).Key(meshKey).Exec(ctx, modelID)
 }
+
+// CreateNode implements the mesh store interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshStore) CreateNode(ctx context.Context, modelID string, node models.Node) error {
+	return q.EmbeddedPush(s.meshes, fieldNodes, toStoreNode).Key(meshKey).Exec(ctx, modelID, node)
+}
+
+// UpdateNode implements the mesh store interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshStore) UpdateNode(ctx context.Context, modelID string, node models.Node) error {
+	return q.EmbeddedUpdate(s.meshes, fieldNodes, fieldID, toStoreNode).Key(meshKey).Exec(ctx, modelID, node.ID, node)
+}
+
+// DeleteNode implements the mesh store interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshStore) DeleteNode(ctx context.Context, modelID, nodeID string) error {
+	return q.EmbeddedPull(s.meshes, fieldNodes, fieldID).Key(meshKey).Exec(ctx, modelID, nodeID)
+}
+
+// GetNode implements the mesh store interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshStore) GetNode(ctx context.Context, modelID, nodeID string) (models.Node, error) {
+	return q.EmbeddedGetOne(s.meshes, fieldNodes, fieldID, extractFirstNode).Key(meshKey).Exec(ctx, modelID, nodeID)
+}

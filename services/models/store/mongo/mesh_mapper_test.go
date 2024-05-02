@@ -13,6 +13,12 @@ func Test_meshMappers(t *testing.T) {
 	require.Equal(t, validModelMesh, fromStoreMesh(validStoreMesh))
 }
 
+func Test_extractFirstNode(t *testing.T) {
+	t.Parallel()
+
+	require.Equal(t, validModelMesh.Nodes["node-id"], extractFirstNode(validStoreMesh))
+}
+
 func Test_mergeMeshUpdate(t *testing.T) {
 	t.Parallel()
 
