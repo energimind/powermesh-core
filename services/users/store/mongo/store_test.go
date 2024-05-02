@@ -13,7 +13,14 @@ func TestUserStore_CreateUser(t *testing.T) {
 	t.Parallel()
 
 	withStore(t, func(t *testing.T, ctx context.Context, store *mongo.UserStore) {
-		require.NoError(t, store.CreateUser(ctx, testUser()))
+		user := testUser()
+
+		require.NoError(t, store.CreateUser(ctx, user))
+
+		foundUser, err := store.GetUser(ctx, user.ID)
+
+		require.NoError(t, err)
+		require.Equal(t, user, foundUser)
 	})
 }
 

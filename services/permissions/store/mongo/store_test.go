@@ -15,7 +15,14 @@ func TestPermissionStore_CreateRoleBinding(t *testing.T) {
 	t.Parallel()
 
 	withStore(t, func(t *testing.T, ctx context.Context, store *mongo.PermissionStore) {
-		require.NoError(t, store.CreateRoleBinding(ctx, testRoleBinding()))
+		roleBinding := testRoleBinding()
+
+		require.NoError(t, store.CreateRoleBinding(ctx, roleBinding))
+
+		createdRoleBinding, err := store.GetRoleBinding(ctx, roleBinding.ID)
+
+		require.NoError(t, err)
+		require.Equal(t, roleBinding, createdRoleBinding)
 	})
 }
 
