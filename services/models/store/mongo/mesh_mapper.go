@@ -110,6 +110,10 @@ func extractFirstNode(m storeMesh) models.Node {
 	return fromStoreNode(m.Nodes[0])
 }
 
+func extractFirstRelation(m storeMesh) models.Relation {
+	return fromStoreRelation(m.Relations[0])
+}
+
 // mergeMeshUpdate returns a MongoDB update document for a mesh.
 // The update document contains only the fields that are set in the mesh.
 func mergeMeshUpdate(m models.Mesh) map[string]any {
