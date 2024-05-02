@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func TestGetOne(t *testing.T) {
+func Test_EmbeddedGetOne(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
@@ -21,10 +21,11 @@ func TestGetOne(t *testing.T) {
 			},
 		}
 
-		rsp, err := GetOne(coll, fromDBPerson).Key("id").Exec(context.Background(), testID)
+		rsp, err := EmbeddedGetOne(coll, "address", "id", extractFirstAddress).Key("id").
+			Exec(context.Background(), testID, testAddressID)
 
 		require.NoError(t, err)
-		require.Equal(t, testDomainPerson, rsp)
+		require.Equal(t, testDomainAddress, rsp)
 	})
 
 	t.Run("not-found", func(t *testing.T) {
@@ -35,7 +36,8 @@ func TestGetOne(t *testing.T) {
 			},
 		}
 
-		rsp, err := GetOne(coll, fromDBPerson).Exec(context.Background(), testID)
+		rsp, err := EmbeddedGetOne(coll, "address", "id", extractFirstAddress).
+			Exec(context.Background(), testID, testAddressID)
 
 		require.IsType(t, errorz.NotFoundError{}, err)
 		require.Zero(t, rsp)
@@ -49,7 +51,8 @@ func TestGetOne(t *testing.T) {
 			},
 		}
 
-		rsp, err := GetOne(coll, fromDBPerson).Exec(context.Background(), testID)
+		rsp, err := EmbeddedGetOne(coll, "address", "id", extractFirstAddress).
+			Exec(context.Background(), testID, testAddressID)
 
 		require.IsType(t, errorz.StoreError{}, err)
 		require.ErrorContains(t, err, "forced error")

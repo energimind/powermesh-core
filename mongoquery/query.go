@@ -20,6 +20,8 @@ type collection interface {
 		opts ...*options.FindOneOptions) *mongo.SingleResult
 	Find(ctx context.Context, filter interface{},
 		opts ...*options.FindOptions) (cur *mongo.Cursor, err error)
+	CountDocuments(ctx context.Context, filter interface{},
+		opts ...*options.CountOptions) (int64, error)
 	Name() string
 }
 

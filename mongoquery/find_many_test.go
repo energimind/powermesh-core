@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/energimind/powermesh-core/errorz"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -81,6 +82,7 @@ func TestFindMany(t *testing.T) {
 
 		rsp, err := findMany.Exec(context.Background(), filter)
 
+		require.IsType(t, errorz.StoreError{}, err)
 		require.ErrorContains(t, err, "failed to drain many")
 		require.Nil(t, rsp)
 	})

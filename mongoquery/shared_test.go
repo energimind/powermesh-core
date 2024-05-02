@@ -13,36 +13,102 @@ import (
 
 var (
 	testID           = "1"
+	testAddressID    = "2"
 	testDomainPerson = person{
 		ID:   testID,
 		Name: "John",
 		Age:  30,
+		Addresses: []address{
+			testDomainAddress,
+		},
 	}
 	testDBPerson = dbPerson{
-		ID:   testID,
-		Name: "John",
-		Age:  30,
+		ID:   testDomainPerson.ID,
+		Name: testDomainPerson.Name,
+		Age:  testDomainPerson.Age,
+		Addresses: []dbAddress{
+			testDBAddress,
+		},
 	}
+	testDomainAddress = address{
+		ID:     testAddressID,
+		Street: "Main St",
+	}
+	testDBAddress = dbAddress(testDomainAddress)
 )
 
 type person struct {
-	ID   string
-	Name string
-	Age  int
+	ID        string
+	Name      string
+	Age       int
+	Addresses []address
 }
 
 type dbPerson struct {
-	ID   string `bson:"id"`
-	Name string `bson:"name"`
-	Age  int    `bson:"age"`
+	ID        string      `bson:"id"`
+	Name      string      `bson:"name"`
+	Age       int         `bson:"age"`
+	Addresses []dbAddress `bson:"addresses"`
+}
+
+type address struct {
+	ID     string
+	Street string
+}
+
+type dbAddress struct {
+	ID     string `bson:"id"`
+	Street string `bson:"street"`
 }
 
 func toDBPerson(p person) dbPerson {
-	return dbPerson(p)
+	return dbPerson{
+		ID:        p.ID,
+		Name:      p.Name,
+		Age:       p.Age,
+		Addresses: toDBAddresses(p.Addresses),
+	}
 }
 
 func fromDBPerson(p dbPerson) person {
-	return person(p)
+	return person{
+		ID:        p.ID,
+		Name:      p.Name,
+		Age:       p.Age,
+		Addresses: fromDBAddresses(p.Addresses),
+	}
+}
+
+func toDBAddress(a address) dbAddress {
+	return dbAddress(a)
+}
+
+func fromDBAddress(a dbAddress) address {
+	return address(a)
+}
+
+func toDBAddresses(as []address) []dbAddress {
+	var dbs []dbAddress
+
+	for _, a := range as {
+		dbs = append(dbs, toDBAddress(a))
+	}
+
+	return dbs
+}
+
+func fromDBAddresses(as []dbAddress) []address {
+	var ads []address
+
+	for _, a := range as {
+		ads = append(ads, fromDBAddress(a))
+	}
+
+	return ads
+}
+
+func extractFirstAddress(p person) address {
+	return p.Addresses[0]
 }
 
 func projectName(p dbPerson) string {
@@ -56,13 +122,14 @@ func (e forcedError) Error() string {
 }
 
 type mockCollection struct {
-	t         *testing.T
-	caller    string
-	insertOne func() (*mongo.InsertOneResult, error)
-	updateOne func() (*mongo.UpdateResult, error)
-	deleteOne func() (*mongo.DeleteResult, error)
-	findOne   func() *mongo.SingleResult
-	find      func() (*mongo.Cursor, error)
+	t              *testing.T
+	caller         string
+	insertOne      func() (*mongo.InsertOneResult, error)
+	updateOne      func() (*mongo.UpdateResult, error)
+	deleteOne      func() (*mongo.DeleteResult, error)
+	findOne        func() *mongo.SingleResult
+	find           func() (*mongo.Cursor, error)
+	countDocuments func() (int64, error)
 }
 
 // Ensure mockCollection implements the collection interface.
@@ -97,6 +164,15 @@ func (c *mockCollection) UpdateOne(_ context.Context, filter interface{}, update
 	case "UpdateOne":
 		require.Equal(c.t, bson.M{"id": testID}, fm)
 		require.Equal(c.t, bson.M{"$set": testDBPerson}, um)
+	case "EmbeddedPull":
+		require.Equal(c.t, bson.M{"id": testID}, fm)
+		require.Equal(c.t, bson.M{"$pull": bson.M{"address": bson.M{"id": testAddressID}}}, um)
+	case "EmbeddedPush":
+		require.Equal(c.t, bson.M{"id": testID}, fm)
+		require.Equal(c.t, bson.M{"$push": bson.M{"address": testDBAddress}}, um)
+	case "EmbeddedUpdate":
+		require.Equal(c.t, bson.M{"id": testID, "address.id": testAddressID}, fm)
+		require.Equal(c.t, bson.M{"$set": bson.M{"address.$": testDBAddress}}, um)
 	default:
 		require.Fail(c.t, "unexpected caller: %s", c.caller)
 	}
@@ -154,6 +230,22 @@ func (c *mockCollection) Find(_ context.Context, filter interface{}, _ ...*optio
 	require.Equal(c.t, bson.M{"age": bson.M{"$gt": 20}}, fm)
 
 	return c.find()
+}
+
+func (c *mockCollection) CountDocuments(_ context.Context, filter interface{}, _ ...*options.CountOptions) (int64, error) {
+	c.t.Helper()
+
+	require.NotNil(c.t, filter)
+
+	fm := filter.(bson.M)
+
+	require.Equal(c.t, bson.M{"age": bson.M{"$gt": 20}}, fm)
+
+	if c.countDocuments == nil {
+		return 0, errors.New("countDocuments not implemented")
+	}
+
+	return c.countDocuments()
 }
 
 func (c *mockCollection) Name() string {
