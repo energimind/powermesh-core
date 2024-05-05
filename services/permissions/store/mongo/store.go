@@ -62,14 +62,20 @@ func (s *PermissionStore) GetRoleBinding(ctx context.Context, id string) (permis
 // GetRoleBindingsByOwner implements the permissions store interface.
 //
 //nolint:wrapcheck // see comment in the header
-func (s *PermissionStore) GetRoleBindingsByOwner(ctx context.Context, ownerID string) ([]permissions.RoleBinding, error) {
+func (s *PermissionStore) GetRoleBindingsByOwner(ctx context.Context, ownerID string) (
+	[]permissions.RoleBinding,
+	error,
+) {
 	return q.FindMany(s.permissions, fromStoreRoleBinding).Exec(ctx, q.Filter{}.EQ(fieldOwnerID, ownerID))
 }
 
 // GetAccessibleResources implements the permissions store interface.
 //
 //nolint:wrapcheck // see comment in the header
-func (s *PermissionStore) GetAccessibleResources(ctx context.Context, query permissions.AccessibleResourcesQuery) ([]string, error) {
+func (s *PermissionStore) GetAccessibleResources(
+	ctx context.Context,
+	query permissions.AccessibleResourcesQuery,
+) ([]string, error) {
 	filter := q.Filter{}.
 		EQ(fieldUserID, query.UserID).
 		EQ(fieldResourceType, query.ResourceType)

@@ -73,7 +73,12 @@ func (s *PermissionService) CreateRoleBinding(
 		return permissions.RoleBinding{}, err
 	}
 
-	if err := s.fireRoleBindingEvent(ctx, actor, permissions.RoleBindingCreated, roleBinding); err != nil {
+	if err := s.fireRoleBindingEvent(
+		ctx,
+		actor,
+		permissions.RoleBindingCreated,
+		roleBinding,
+	); err != nil {
 		return permissions.RoleBinding{}, err
 	}
 
@@ -103,7 +108,12 @@ func (s *PermissionService) UpdateRoleBinding(
 		return permissions.RoleBinding{}, err
 	}
 
-	if err := s.fireRoleBindingEvent(ctx, actor, permissions.RoleBindingUpdated, roleBinding); err != nil {
+	if err := s.fireRoleBindingEvent(
+		ctx,
+		actor,
+		permissions.RoleBindingUpdated,
+		roleBinding,
+	); err != nil {
 		return permissions.RoleBinding{}, err
 	}
 
@@ -126,7 +136,12 @@ func (s *PermissionService) DeleteRoleBinding(
 		return err
 	}
 
-	if err := s.fireRoleBindingEvent(ctx, actor, permissions.RoleBindingDeleted, permissions.RoleBinding{ID: id}); err != nil {
+	if err := s.fireRoleBindingEvent(
+		ctx,
+		actor,
+		permissions.RoleBindingDeleted,
+		permissions.RoleBinding{ID: id},
+	); err != nil {
 		return err
 	}
 
