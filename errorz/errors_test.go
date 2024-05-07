@@ -11,8 +11,15 @@ func TestErrors(t *testing.T) {
 	t.Parallel()
 
 	tester := func(err, exp error) {
+		t.Helper()
+
 		require.IsType(t, exp, err)
 		require.Equal(t, "test:42", err.Error())
+		require.True(t, IsDomainError(err))
+
+		require.NotPanics(t, func() {
+			err.(domainError).isDomainError()
+		})
 	}
 
 	tester(NewBadRequestError("test:%d", 42), BadRequestError{})

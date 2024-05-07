@@ -17,6 +17,11 @@ func NewBadRequestError(format string, args ...any) BadRequestError {
 	}
 }
 
+// isDomainError implements the domainError interface.
+func (BadRequestError) isDomainError() {
+	// tagging interface
+}
+
 // IsBadRequestError returns true if the error is a BadRequestError.
 func IsBadRequestError(err error) bool {
 	var badRequestError BadRequestError
@@ -39,6 +44,11 @@ func NewNotFoundError(format string, args ...any) NotFoundError {
 	return NotFoundError{
 		Message: fmt.Sprintf(format, args...),
 	}
+}
+
+// isDomainError implements the domainError interface.
+func (NotFoundError) isDomainError() {
+	// tagging interface
 }
 
 // Error returns the error message.
@@ -65,6 +75,11 @@ func NewAccessDeniedError(format string, args ...any) AccessDeniedError {
 	}
 }
 
+// isDomainError implements the domainError interface.
+func (AccessDeniedError) isDomainError() {
+	// tagging interface
+}
+
 // Error returns the error message.
 func (e AccessDeniedError) Error() string {
 	return e.Message
@@ -87,6 +102,11 @@ func NewUnauthorizedError(format string, args ...any) UnauthorizedError {
 	return UnauthorizedError{
 		Message: fmt.Sprintf(format, args...),
 	}
+}
+
+// isDomainError implements the domainError interface.
+func (UnauthorizedError) isDomainError() {
+	// tagging interface
 }
 
 // Error returns the error message.
@@ -113,6 +133,11 @@ func NewValidationError(format string, args ...any) ValidationError {
 	}
 }
 
+// isDomainError implements the domainError interface.
+func (ValidationError) isDomainError() {
+	// tagging interface
+}
+
 // Error returns the error message.
 func (e ValidationError) Error() string {
 	return e.Message
@@ -135,6 +160,11 @@ func NewStoreError(format string, args ...any) StoreError {
 	return StoreError{
 		Message: fmt.Sprintf(format, args...),
 	}
+}
+
+// isDomainError implements the domainError interface.
+func (StoreError) isDomainError() {
+	// tagging interface
 }
 
 // Error returns the error message.
@@ -162,6 +192,11 @@ func NewGatewayError(format string, args ...any) GatewayError {
 	}
 }
 
+// isDomainError implements the domainError interface.
+func (GatewayError) isDomainError() {
+	// tagging interface
+}
+
 // Error returns the error message.
 func (e GatewayError) Error() string {
 	return e.Message
@@ -186,6 +221,11 @@ func NewInternalError(format string, args ...any) InternalError {
 	}
 }
 
+// isDomainError implements the domainError interface.
+func (InternalError) isDomainError() {
+	// tagging interface
+}
+
 // Error returns the error message.
 func (e InternalError) Error() string {
 	return e.Message
@@ -196,4 +236,16 @@ func IsInternalError(err error) bool {
 	var internalError InternalError
 
 	return errors.As(err, &internalError)
+}
+
+// domainError is the interface implemented by domain errors.
+type domainError interface {
+	isDomainError()
+}
+
+// IsDomainError returns true if the error is a domain error.
+func IsDomainError(err error) bool {
+	_, ok := err.(domainError)
+
+	return ok
 }
