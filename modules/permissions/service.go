@@ -6,8 +6,8 @@ import (
 	"github.com/energimind/powermesh-core/access"
 )
 
-// RoleBindingService defines the role binding service.
-type RoleBindingService interface {
+// PermissionService defines the role binding service.
+type PermissionService interface {
 	CreateRoleBinding(ctx context.Context, actor access.Actor, data RoleBindingData) (RoleBinding, error)
 	UpdateRoleBinding(ctx context.Context, actor access.Actor, id string, data RoleBindingData) (RoleBinding, error)
 	DeleteRoleBinding(ctx context.Context, actor access.Actor, id string) error

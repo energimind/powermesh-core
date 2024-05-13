@@ -31,7 +31,7 @@ type listener interface {
 
 // PermissionService implements the permissions service.
 //
-// It implements the permissions.RoleBindingService interface.
+// It implements the permissions.PermissionService interface.
 //
 // We do not wrap the errors returned by the store because they are already
 // packed as domain errors. Therefore, we disable the wrapcheck linter for these calls.
@@ -42,8 +42,8 @@ type PermissionService struct {
 	now      func() time.Time
 }
 
-// Ensure PermissionService implements the permissions.RoleBindingService interface.
-var _ permissions.RoleBindingService = (*PermissionService)(nil)
+// Ensure PermissionService implements the permissions.PermissionService interface.
+var _ permissions.PermissionService = (*PermissionService)(nil)
 
 // NewPermissionService creates a new permissions service.
 func NewPermissionService(idGen idGenerator, store store, opts ...Option) *PermissionService {
@@ -60,7 +60,7 @@ func NewPermissionService(idGen idGenerator, store store, opts ...Option) *Permi
 	return svc
 }
 
-// CreateRoleBinding implements the permissions.RoleBindingService interface.
+// CreateRoleBinding implements the permissions.PermissionService interface.
 //
 //nolint:wrapcheck // see comment in the header
 func (s *PermissionService) CreateRoleBinding(
@@ -90,7 +90,7 @@ func (s *PermissionService) CreateRoleBinding(
 	return roleBinding, nil
 }
 
-// UpdateRoleBinding implements the permissions.RoleBindingService interface.
+// UpdateRoleBinding implements the permissions.PermissionService interface.
 //
 //nolint:wrapcheck // see comment in the header
 func (s *PermissionService) UpdateRoleBinding(
@@ -125,7 +125,7 @@ func (s *PermissionService) UpdateRoleBinding(
 	return roleBinding, nil
 }
 
-// DeleteRoleBinding implements the permissions.RoleBindingService interface.
+// DeleteRoleBinding implements the permissions.PermissionService interface.
 //
 //nolint:wrapcheck // see comment in the header
 func (s *PermissionService) DeleteRoleBinding(
@@ -153,7 +153,7 @@ func (s *PermissionService) DeleteRoleBinding(
 	return nil
 }
 
-// GetRoleBinding implements the permissions.RoleBindingService interface.
+// GetRoleBinding implements the permissions.PermissionService interface.
 //
 //nolint:wrapcheck // see comment in the header
 func (s *PermissionService) GetRoleBinding(
@@ -172,7 +172,7 @@ func (s *PermissionService) GetRoleBinding(
 	return roleBinding, nil
 }
 
-// GetRoleBindingsByOwner implements the permissions.RoleBindingService interface.
+// GetRoleBindingsByOwner implements the permissions.PermissionService interface.
 //
 //nolint:wrapcheck // see comment in the header
 func (s *PermissionService) GetRoleBindingsByOwner(
@@ -191,7 +191,7 @@ func (s *PermissionService) GetRoleBindingsByOwner(
 	return roleBindings, nil
 }
 
-// GetAccessibleResources implements the permissions.RoleBindingService interface.
+// GetAccessibleResources implements the permissions.PermissionService interface.
 //
 //nolint:wrapcheck // see comment in the header
 func (s *PermissionService) GetAccessibleResources(
