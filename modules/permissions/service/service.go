@@ -46,13 +46,18 @@ type PermissionService struct {
 var _ permissions.RoleBindingService = (*PermissionService)(nil)
 
 // NewPermissionService creates a new permissions service.
-func NewPermissionService(idGen idGenerator, store store, listener listener) *PermissionService {
-	return &PermissionService{
-		idGen:    idGen,
-		store:    store,
-		listener: listener,
-		now:      time.Now,
+func NewPermissionService(idGen idGenerator, store store, opts ...Option) *PermissionService {
+	svc := &PermissionService{
+		idGen: idGen,
+		store: store,
+		now:   time.Now,
 	}
+
+	for _, opt := range opts {
+		opt(svc)
+	}
+
+	return svc
 }
 
 // CreateRoleBinding implements the permissions.RoleBindingService interface.

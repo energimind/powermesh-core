@@ -49,7 +49,7 @@ func TestUserService_CreateUser(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
-			svc := NewUserService(newTestIDGenerator(), ts, tl)
+			svc := NewUserService(newTestIDGenerator(), ts, WithListener(tl))
 
 			user, err := svc.CreateUser(context.Background(), test.actor, test.data)
 
@@ -122,7 +122,7 @@ func TestUserService_UpdateUser(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
-			svc := NewUserService(newTestIDGenerator(), ts, tl)
+			svc := NewUserService(newTestIDGenerator(), ts, WithListener(tl))
 
 			user, err := svc.UpdateUser(context.Background(), test.actor, test.id, test.data)
 
@@ -184,7 +184,7 @@ func TestUserService_DeleteUser(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
-			svc := NewUserService(newTestIDGenerator(), ts, tl)
+			svc := NewUserService(newTestIDGenerator(), ts, WithListener(tl))
 
 			err := svc.DeleteUser(context.Background(), test.actor, test.id)
 
@@ -233,7 +233,7 @@ func TestUserService_GetUser(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
-			svc := NewUserService(newTestIDGenerator(), ts, newTestListener(false))
+			svc := NewUserService(newTestIDGenerator(), ts, WithListener(newTestListener(false)))
 
 			user, err := svc.GetUser(context.Background(), test.id)
 
@@ -281,7 +281,7 @@ func TestUserService_GetUsersByIDs(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
-			svc := NewUserService(newTestIDGenerator(), ts, newTestListener(false))
+			svc := NewUserService(newTestIDGenerator(), ts, WithListener(newTestListener(false)))
 
 			found, err := svc.GetUsersByIDs(context.Background(), test.ids)
 
@@ -322,7 +322,7 @@ func TestUserService_GetUserByUsername(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
-			svc := NewUserService(newTestIDGenerator(), ts, newTestListener(false))
+			svc := NewUserService(newTestIDGenerator(), ts, WithListener(newTestListener(false)))
 
 			user, err := svc.GetUserByUsername(context.Background(), test.username)
 

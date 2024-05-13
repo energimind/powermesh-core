@@ -63,13 +63,18 @@ type MeshService struct {
 var _ models.MeshService = (*MeshService)(nil)
 
 // NewMeshService creates a new mesh service.
-func NewMeshService(idGen idGenerator, store meshStore, listener meshListener) *MeshService {
-	return &MeshService{
-		idGen:    idGen,
-		store:    store,
-		listener: listener,
-		now:      time.Now,
+func NewMeshService(idGen idGenerator, store meshStore, opts ...MeshServiceOption) *MeshService {
+	svc := &MeshService{
+		idGen: idGen,
+		store: store,
+		now:   time.Now,
 	}
+
+	for _, opt := range opts {
+		opt(svc)
+	}
+
+	return svc
 }
 
 // CreateMesh implements the models.MeshService interface.

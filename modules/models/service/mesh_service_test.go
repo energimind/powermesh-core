@@ -55,7 +55,7 @@ func TestMeshService_CreateMesh(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			mesh, err := svc.CreateMesh(context.Background(), test.actor, test.modelID, test.data)
 
@@ -116,7 +116,7 @@ func TestMeshService_UpdateMesh(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			mesh, err := svc.UpdateMesh(context.Background(), test.actor, test.modelID, test.data)
 
@@ -177,7 +177,7 @@ func TestMeshService_MergeMesh(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			err := svc.MergeMesh(context.Background(), test.actor, test.modelID, test.data)
 
@@ -231,7 +231,7 @@ func TestMeshService_DeleteMesh(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			err := svc.DeleteMesh(context.Background(), test.actor, test.modelID)
 
@@ -275,7 +275,7 @@ func TestMeshService_GetMesh(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, nil)
+			svc := NewMeshService(newTestIDGenerator(), ts)
 
 			mesh, err := svc.GetMesh(context.Background(), test.modelID)
 
@@ -341,7 +341,7 @@ func TestMeshService_CreateNode(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			node, err := svc.CreateNode(context.Background(), test.actor, test.modelID, test.data)
 
@@ -418,7 +418,7 @@ func TestMeshService_UpdateNode(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			node, err := svc.UpdateNode(context.Background(), test.actor, test.modelID, test.nodeID, test.data)
 
@@ -484,7 +484,7 @@ func TestMeshService_DeleteNode(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			err := svc.DeleteNode(context.Background(), test.actor, test.modelID, test.nodeID)
 
@@ -538,7 +538,7 @@ func TestMeshService_GetNode(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, nil)
+			svc := NewMeshService(newTestIDGenerator(), ts)
 
 			node, err := svc.GetNode(context.Background(), test.modelID, test.nodeID)
 
@@ -604,7 +604,7 @@ func TestMeshService_CreateRelation(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			relation, err := svc.CreateRelation(context.Background(), test.actor, test.modelID, test.data)
 
@@ -680,7 +680,7 @@ func TestMeshService_UpdateRelation(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			relation, err := svc.UpdateRelation(context.Background(), test.actor, test.modelID, test.relationID, test.data)
 
@@ -745,7 +745,7 @@ func TestMeshService_DeleteRelation(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 			tl := newTestMeshListener(test.listenerError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, tl)
+			svc := NewMeshService(newTestIDGenerator(), ts, WithMeshListener(tl))
 
 			err := svc.DeleteRelation(context.Background(), test.actor, test.modelID, test.relationID)
 
@@ -799,7 +799,7 @@ func TestMeshService_GetRelation(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestMeshStore(t, test.storeError)
 
-			svc := NewMeshService(newTestIDGenerator(), ts, nil)
+			svc := NewMeshService(newTestIDGenerator(), ts)
 
 			relation, err := svc.GetRelation(context.Background(), test.modelID, test.relationID)
 

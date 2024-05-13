@@ -46,13 +46,18 @@ type UserService struct {
 var _ users.UserService = (*UserService)(nil)
 
 // NewUserService creates a new user service.
-func NewUserService(idGen idGenerator, store store, listener listener) *UserService {
-	return &UserService{
-		idGen:    idGen,
-		store:    store,
-		listener: listener,
-		now:      time.Now,
+func NewUserService(idGen idGenerator, store store, opts ...Option) *UserService {
+	svc := &UserService{
+		idGen: idGen,
+		store: store,
+		now:   time.Now,
 	}
+
+	for _, opt := range opts {
+		opt(svc)
+	}
+
+	return svc
 }
 
 // CreateUser implements the users.UserService interface.

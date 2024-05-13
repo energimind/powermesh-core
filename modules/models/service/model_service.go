@@ -40,13 +40,18 @@ type ModelService struct {
 var _ models.ModelService = (*ModelService)(nil)
 
 // NewModelService creates a new model service.
-func NewModelService(idGen idGenerator, store modelStore, listener modelListener) *ModelService {
-	return &ModelService{
-		idGen:    idGen,
-		store:    store,
-		listener: listener,
-		now:      time.Now,
+func NewModelService(idGen idGenerator, store modelStore, opts ...ModelServiceOption) *ModelService {
+	svc := &ModelService{
+		idGen: idGen,
+		store: store,
+		now:   time.Now,
 	}
+
+	for _, opt := range opts {
+		opt(svc)
+	}
+
+	return svc
 }
 
 // CreateModel implements the models.ModelService interface.
