@@ -10,7 +10,7 @@ func NewMatrix() Matrix {
 
 	matrix[RoleNone] = PermissionsNone
 	matrix[RoleAdmin] = PermissionsAll
-	matrix[RoleCreator] = Permissions(PermissionCreate | PermissionRead | PermissionWrite)
+	matrix[RoleCreator] = Permissions(PermissionCreate | PermissionRead | PermissionWrite | PermissionDelete)
 	matrix[RoleEditor] = Permissions(PermissionRead | PermissionWrite)
 	matrix[RoleGuest] = Permissions(PermissionRead)
 
