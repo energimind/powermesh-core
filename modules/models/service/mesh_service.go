@@ -462,6 +462,10 @@ func (s *MeshService) fireMeshEvent(
 	eventType models.EventType,
 	mesh models.Mesh,
 ) error {
+	if s.listener == nil {
+		return nil
+	}
+
 	event := models.MeshEvent{
 		EventHeader: models.EventHeader{
 			Type:      eventType,

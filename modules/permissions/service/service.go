@@ -247,6 +247,10 @@ func (s *PermissionService) fireRoleBindingEvent(
 	eventType permissions.EventType,
 	roleBinding permissions.RoleBinding,
 ) error {
+	if s.listener == nil {
+		return nil
+	}
+
 	event := permissions.RoleBindingEvent{
 		EventHeader: permissions.EventHeader{
 			Type:      eventType,

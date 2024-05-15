@@ -183,6 +183,10 @@ func (s *ModelService) fireModelEvent(
 	eventType models.EventType,
 	model models.Model,
 ) error {
+	if s.listener == nil {
+		return nil
+	}
+
 	event := models.ModelEvent{
 		EventHeader: models.EventHeader{
 			Type:      eventType,

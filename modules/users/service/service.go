@@ -208,6 +208,10 @@ func (s *UserService) fireUserEvent(
 	eventType users.EventType,
 	user users.User,
 ) error {
+	if s.listener == nil {
+		return nil
+	}
+
 	event := users.UserEvent{
 		EventHeader: users.EventHeader{
 			Type:      eventType,

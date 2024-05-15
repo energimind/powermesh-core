@@ -411,3 +411,18 @@ func TestPermissionService_GetAccessibleResources(t *testing.T) {
 		})
 	}
 }
+
+func TestPermissionService_fireRoleBindingEvent_noListener(t *testing.T) {
+	t.Parallel()
+
+	svc := NewPermissionService(nil, newTestIDGenerator())
+
+	require.NotPanics(t, func() {
+		_ = svc.fireRoleBindingEvent(
+			context.Background(),
+			adminActor,
+			permissions.RoleBindingCreated,
+			permissions.RoleBinding{},
+		)
+	})
+}

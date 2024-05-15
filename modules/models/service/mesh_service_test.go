@@ -814,3 +814,18 @@ func TestMeshService_GetRelation(t *testing.T) {
 		})
 	}
 }
+
+func TestMeshService_fireMeshEvent_noListener(t *testing.T) {
+	t.Parallel()
+
+	svc := NewMeshService(nil, nil)
+
+	require.NotPanics(t, func() {
+		_ = svc.fireMeshEvent(
+			context.Background(),
+			adminActor,
+			models.MeshCreated,
+			models.Mesh{},
+		)
+	})
+}

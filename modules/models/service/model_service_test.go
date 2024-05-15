@@ -303,3 +303,18 @@ func TestModelService_GetModelsByIDs(t *testing.T) {
 		})
 	}
 }
+
+func TestModelService_fireModelEvent_noListener(t *testing.T) {
+	t.Parallel()
+
+	svc := NewModelService(newTestModelStore(t, false), newTestIDGenerator())
+
+	require.NotPanics(t, func() {
+		_ = svc.fireModelEvent(
+			context.Background(),
+			adminActor,
+			models.ModelCreated,
+			models.Model{ID: validModelID},
+		)
+	})
+}

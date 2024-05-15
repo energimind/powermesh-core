@@ -338,3 +338,18 @@ func TestUserService_GetUserByUsername(t *testing.T) {
 		})
 	}
 }
+
+func TestUserService_fireUserEvent_noListener(t *testing.T) {
+	t.Parallel()
+
+	svc := NewUserService(newTestStore(t, false), newTestIDGenerator())
+
+	require.NotPanics(t, func() {
+		_ = svc.fireUserEvent(
+			context.Background(),
+			adminActor,
+			users.UserCreated,
+			users.User{},
+		)
+	})
+}
