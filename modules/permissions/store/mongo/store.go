@@ -72,8 +72,16 @@ func (s *PermissionStore) DeleteRoleBindingsByResource(
 // GetRoleBinding implements the permissions store interface.
 //
 //nolint:wrapcheck // see comment in the header
-func (s *PermissionStore) GetRoleBinding(ctx context.Context, id string) (permissions.RoleBinding, error) {
-	return q.GetOne(s.permissions, fromStoreRoleBinding).Exec(ctx, id)
+func (s *PermissionStore) GetRoleBinding(
+	ctx context.Context,
+	query permissions.RoleBindingQuery,
+) (permissions.RoleBinding, error) {
+	filter := q.Filter{}.
+		EQ(fieldUserID, query.UserID).
+		EQ(fieldResourceID, query.ResourceID).
+		EQ(fieldResourceType, query.ResourceType)
+
+	return q.GetOne(s.permissions, fromStoreRoleBinding).Exec(ctx, filter)
 }
 
 // GetRoleBindingsByOwner implements the permissions store interface.

@@ -48,6 +48,14 @@ func testRoleBinding2() permissions.RoleBinding {
 	}
 }
 
+func testRoleBindingQuery() permissions.RoleBindingQuery {
+	return permissions.RoleBindingQuery{
+		UserID:       "user1",
+		ResourceID:   "res1",
+		ResourceType: permissions.ResourceTypeModel,
+	}
+}
+
 func withStore(t *testing.T, f func(*testing.T, context.Context, *mongo.PermissionStore)) {
 	t.Helper()
 

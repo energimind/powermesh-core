@@ -19,7 +19,7 @@ func TestPermissionStore_CreateRoleBinding(t *testing.T) {
 
 		require.NoError(t, store.CreateRoleBinding(ctx, roleBinding))
 
-		createdRoleBinding, err := store.GetRoleBinding(ctx, roleBinding.ID)
+		createdRoleBinding, err := store.GetRoleBinding(ctx, testRoleBindingQuery())
 
 		require.NoError(t, err)
 		require.Equal(t, roleBinding, createdRoleBinding)
@@ -43,7 +43,7 @@ func TestPermissionStore_UpdateRoleBinding(t *testing.T) {
 
 			require.NoError(t, store.UpdateRoleBinding(ctx, roleBinding))
 
-			updatedRoleBinding, err := store.GetRoleBinding(ctx, roleBinding.ID)
+			updatedRoleBinding, err := store.GetRoleBinding(ctx, testRoleBindingQuery())
 
 			require.NoError(t, err)
 			require.Equal(t, roleBinding, updatedRoleBinding)
@@ -66,7 +66,7 @@ func TestPermissionStore_DeleteRoleBinding(t *testing.T) {
 
 			require.NoError(t, store.DeleteRoleBinding(ctx, roleBinding.ID))
 
-			_, err := store.GetRoleBinding(ctx, roleBinding.ID)
+			_, err := store.GetRoleBinding(ctx, testRoleBindingQuery())
 			require.Error(t, err)
 		})
 	})
@@ -97,7 +97,7 @@ func TestPermissionStore_GetRoleBinding(t *testing.T) {
 
 	withStore(t, func(t *testing.T, ctx context.Context, store *mongo.PermissionStore) {
 		t.Run("not-found", func(t *testing.T) {
-			_, err := store.GetRoleBinding(ctx, "missing")
+			_, err := store.GetRoleBinding(ctx, permissions.RoleBindingQuery{})
 
 			require.IsType(t, errorz.NotFoundError{}, err)
 		})
@@ -107,7 +107,7 @@ func TestPermissionStore_GetRoleBinding(t *testing.T) {
 
 			require.NoError(t, store.CreateRoleBinding(ctx, roleBinding))
 
-			createdRoleBinding, err := store.GetRoleBinding(ctx, roleBinding.ID)
+			createdRoleBinding, err := store.GetRoleBinding(ctx, testRoleBindingQuery())
 
 			require.NoError(t, err)
 			require.Equal(t, roleBinding, createdRoleBinding)
