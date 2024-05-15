@@ -63,7 +63,7 @@ type MeshService struct {
 var _ models.MeshService = (*MeshService)(nil)
 
 // NewMeshService creates a new mesh service.
-func NewMeshService(idGen idGenerator, store meshStore, opts ...MeshServiceOption) *MeshService {
+func NewMeshService(store meshStore, idGen idGenerator, opts ...MeshServiceOption) *MeshService {
 	svc := &MeshService{
 		idGen: idGen,
 		store: store,

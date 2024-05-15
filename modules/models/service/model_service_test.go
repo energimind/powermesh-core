@@ -50,7 +50,7 @@ func TestModelService_CreateModel(t *testing.T) {
 			ts := newTestModelStore(t, test.storeError)
 			tl := newTestModelListener(test.listenerError)
 
-			svc := NewModelService(newTestIDGenerator(), ts, WithModelListener(tl))
+			svc := NewModelService(ts, newTestIDGenerator(), WithModelListener(tl))
 
 			model, err := svc.CreateModel(context.Background(), test.actor, test.data)
 
@@ -124,7 +124,7 @@ func TestModelService_UpdateModel(t *testing.T) {
 			ts := newTestModelStore(t, test.storeError)
 			tl := newTestModelListener(test.listenerError)
 
-			svc := NewModelService(newTestIDGenerator(), ts, WithModelListener(tl))
+			svc := NewModelService(ts, newTestIDGenerator(), WithModelListener(tl))
 
 			model, err := svc.UpdateModel(context.Background(), test.actor, test.id, test.data)
 
@@ -187,7 +187,7 @@ func TestModelService_DeleteModel(t *testing.T) {
 			ts := newTestModelStore(t, test.storeError)
 			tl := newTestModelListener(test.listenerError)
 
-			svc := NewModelService(newTestIDGenerator(), ts, WithModelListener(tl))
+			svc := NewModelService(ts, newTestIDGenerator(), WithModelListener(tl))
 
 			err := svc.DeleteModel(context.Background(), test.actor, test.id)
 
@@ -238,7 +238,7 @@ func TestModelService_GetModel(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestModelStore(t, test.storeErr)
 
-			svc := NewModelService(newTestIDGenerator(), ts, WithModelListener(newTestModelListener(false)))
+			svc := NewModelService(ts, newTestIDGenerator(), WithModelListener(newTestModelListener(false)))
 
 			model, err := svc.GetModel(context.Background(), test.id)
 
@@ -288,7 +288,7 @@ func TestModelService_GetModelsByIDs(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			ts := newTestModelStore(t, test.storeErr)
 
-			svc := NewModelService(newTestIDGenerator(), ts, WithModelListener(newTestModelListener(false)))
+			svc := NewModelService(ts, newTestIDGenerator(), WithModelListener(newTestModelListener(false)))
 
 			found, err := svc.GetModelsByIDs(context.Background(), test.ids)
 

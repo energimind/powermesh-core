@@ -50,7 +50,7 @@ func TestPermissionService_CreateRoleBinding(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
 
-			svc := NewPermissionService(newTestIDGenerator(), ts, WithListener(tl))
+			svc := NewPermissionService(ts, newTestIDGenerator(), WithListener(tl))
 
 			rb, err := svc.CreateRoleBinding(context.Background(), test.actor, test.data)
 
@@ -124,7 +124,7 @@ func TestPermissionService_UpdateRoleBinding(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
 
-			svc := NewPermissionService(newTestIDGenerator(), ts, WithListener(tl))
+			svc := NewPermissionService(ts, newTestIDGenerator(), WithListener(tl))
 
 			rb, err := svc.UpdateRoleBinding(context.Background(), test.actor, test.id, test.data)
 
@@ -187,7 +187,7 @@ func TestPermissionService_DeleteRoleBinding(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
 
-			svc := NewPermissionService(newTestIDGenerator(), ts, WithListener(tl))
+			svc := NewPermissionService(ts, newTestIDGenerator(), WithListener(tl))
 
 			err := svc.DeleteRoleBinding(context.Background(), test.actor, test.id)
 
@@ -247,7 +247,7 @@ func TestPermissionService_DeleteRoleBindingsByResource(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
 
-			svc := NewPermissionService(newTestIDGenerator(), ts, WithListener(tl))
+			svc := NewPermissionService(ts, newTestIDGenerator(), WithListener(tl))
 
 			err := svc.DeleteRoleBindingsByResource(context.Background(), test.actor, test.query.ResourceID, test.query.ResourceType)
 
@@ -299,7 +299,7 @@ func TestPermissionService_GetRoleBinding(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
 
-			svc := NewPermissionService(newTestIDGenerator(), ts, WithListener(tl))
+			svc := NewPermissionService(ts, newTestIDGenerator(), WithListener(tl))
 
 			rb, err := svc.GetRoleBinding(context.Background(), test.query)
 
@@ -348,7 +348,7 @@ func TestPermissionService_GetRoleBindingsByOwner(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
 
-			svc := NewPermissionService(newTestIDGenerator(), ts, WithListener(tl))
+			svc := NewPermissionService(ts, newTestIDGenerator(), WithListener(tl))
 
 			rbs, err := svc.GetRoleBindingsByOwner(context.Background(), test.ownerID)
 
@@ -396,7 +396,7 @@ func TestPermissionService_GetAccessibleResources(t *testing.T) {
 			ts := newTestStore(t, test.storeError)
 			tl := newTestListener(test.listenerError)
 
-			svc := NewPermissionService(newTestIDGenerator(), ts, WithListener(tl))
+			svc := NewPermissionService(ts, newTestIDGenerator(), WithListener(tl))
 
 			resources, err := svc.GetAccessibleResources(context.Background(), test.query)
 

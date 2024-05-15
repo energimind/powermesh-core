@@ -47,7 +47,7 @@ type PermissionService struct {
 var _ permissions.PermissionService = (*PermissionService)(nil)
 
 // NewPermissionService creates a new permissions service.
-func NewPermissionService(idGen idGenerator, store store, opts ...Option) *PermissionService {
+func NewPermissionService(store store, idGen idGenerator, opts ...Option) *PermissionService {
 	svc := &PermissionService{
 		idGen: idGen,
 		store: store,

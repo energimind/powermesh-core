@@ -46,7 +46,7 @@ type UserService struct {
 var _ users.UserService = (*UserService)(nil)
 
 // NewUserService creates a new user service.
-func NewUserService(idGen idGenerator, store store, opts ...Option) *UserService {
+func NewUserService(store store, idGen idGenerator, opts ...Option) *UserService {
 	svc := &UserService{
 		idGen: idGen,
 		store: store,

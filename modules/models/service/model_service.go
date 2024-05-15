@@ -40,7 +40,7 @@ type ModelService struct {
 var _ models.ModelService = (*ModelService)(nil)
 
 // NewModelService creates a new model service.
-func NewModelService(idGen idGenerator, store modelStore, opts ...ModelServiceOption) *ModelService {
+func NewModelService(store modelStore, idGen idGenerator, opts ...ModelServiceOption) *ModelService {
 	svc := &ModelService{
 		idGen: idGen,
 		store: store,
