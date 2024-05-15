@@ -72,6 +72,26 @@ func TestPermissionStore_DeleteRoleBinding(t *testing.T) {
 	})
 }
 
+func TestPermissionStore_DeleteRoleBindingsByResource(t *testing.T) {
+	t.Parallel()
+
+	withStore(t, func(t *testing.T, ctx context.Context, store *mongo.PermissionStore) {
+		t.Run("success", func(t *testing.T) {
+			roleBinding := testRoleBinding()
+
+			require.NoError(t, store.CreateRoleBinding(ctx, roleBinding))
+			require.NoError(t, store.CreateRoleBinding(ctx, testRoleBinding2()))
+
+			require.NoError(t, store.DeleteRoleBindingsByResource(ctx, roleBinding.ResourceID, roleBinding.ResourceType))
+
+			roleBindings, err := store.GetRoleBindingsByOwner(ctx, roleBinding.OwnerID)
+
+			require.NoError(t, err)
+			require.Empty(t, roleBindings)
+		})
+	})
+}
+
 func TestPermissionStore_GetRoleBinding(t *testing.T) {
 	t.Parallel()
 
