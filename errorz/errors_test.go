@@ -29,6 +29,7 @@ func TestErrors(t *testing.T) {
 	tester(NewValidationError("test:%d", 42), ValidationError{})
 	tester(NewStoreError("test:%d", 42), StoreError{})
 	tester(NewGatewayError("test:%d", 42), GatewayError{})
+	tester(NewSessionError("test:%d", 42), SessionError{})
 	tester(NewInternalError("test:%d", 42), InternalError{})
 }
 
@@ -47,5 +48,6 @@ func TestErrorIs(t *testing.T) {
 	tester(IsValidationError, ValidationError{})
 	tester(IsStoreError, StoreError{})
 	tester(IsGatewayError, GatewayError{})
+	tester(IsSessionError, SessionError{})
 	tester(IsInternalError, InternalError{})
 }

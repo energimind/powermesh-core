@@ -209,6 +209,35 @@ func IsGatewayError(err error) bool {
 	return errors.As(err, &gatewayError)
 }
 
+// SessionError is the error returned when an error occurs while handling a session.
+type SessionError struct {
+	Message string
+}
+
+// NewSessionError returns a new SessionError.
+func NewSessionError(format string, args ...any) SessionError {
+	return SessionError{
+		Message: fmt.Sprintf(format, args...),
+	}
+}
+
+// isDomainError implements the domainError interface.
+func (SessionError) isDomainError() {
+	// tagging interface
+}
+
+// Error returns the error message.
+func (e SessionError) Error() string {
+	return e.Message
+}
+
+// IsSessionError returns true if the error is a SessionError.
+func IsSessionError(err error) bool {
+	var sessionError SessionError
+
+	return errors.As(err, &sessionError)
+}
+
 // InternalError is the error returned when an internal error occurs.
 type InternalError struct {
 	Message string
