@@ -19,6 +19,7 @@ type store interface {
 	CreateRoleBinding(ctx context.Context, binding permissions.RoleBinding) error
 	UpdateRoleBinding(ctx context.Context, binding permissions.RoleBinding) error
 	DeleteRoleBinding(ctx context.Context, id string) error
+	DeleteRoleBindingsByResource(ctx context.Context, resourceID string, resourceType permissions.ResourceType) error
 	GetRoleBinding(ctx context.Context, query permissions.RoleBindingQuery) (permissions.RoleBinding, error)
 	GetRoleBindingsByOwner(ctx context.Context, ownerID string) ([]permissions.RoleBinding, error)
 	GetAccessibleResources(ctx context.Context, query permissions.AccessibleResourcesQuery) ([]string, error)
@@ -146,6 +147,35 @@ func (s *PermissionService) DeleteRoleBinding(
 		actor,
 		permissions.RoleBindingDeleted,
 		permissions.RoleBinding{ID: id},
+	); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DeleteRoleBindingsByResource implements the permissions.PermissionService interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *PermissionService) DeleteRoleBindingsByResource(
+	ctx context.Context,
+	actor access.Actor,
+	resourceID string,
+	resourceType permissions.ResourceType,
+) error {
+	if err := validateResourceID(resourceID); err != nil {
+		return err
+	}
+
+	if err := s.store.DeleteRoleBindingsByResource(ctx, resourceID, resourceType); err != nil {
+		return err
+	}
+
+	if err := s.fireRoleBindingEvent(
+		ctx,
+		actor,
+		permissions.RoleBindingDeleted,
+		permissions.RoleBinding{ResourceID: resourceID, ResourceType: resourceType},
 	); err != nil {
 		return err
 	}

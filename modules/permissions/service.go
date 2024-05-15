@@ -11,6 +11,7 @@ type PermissionService interface {
 	CreateRoleBinding(ctx context.Context, actor access.Actor, data RoleBindingData) (RoleBinding, error)
 	UpdateRoleBinding(ctx context.Context, actor access.Actor, id string, data RoleBindingData) (RoleBinding, error)
 	DeleteRoleBinding(ctx context.Context, actor access.Actor, id string) error
+	DeleteRoleBindingsByResource(ctx context.Context, actor access.Actor, resourceID string, resourceType ResourceType) error
 	GetRoleBinding(ctx context.Context, query RoleBindingQuery) (RoleBinding, error)
 	GetRoleBindingsByOwner(ctx context.Context, ownerID string) ([]RoleBinding, error)
 	GetAccessibleResources(ctx context.Context, query AccessibleResourcesQuery) ([]string, error)

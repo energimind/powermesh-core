@@ -150,6 +150,23 @@ func (s *testStore) DeleteRoleBinding(
 	return nil
 }
 
+func (s *testStore) DeleteRoleBindingsByResource(
+	_ context.Context,
+	resourceID string,
+	resourceType permissions.ResourceType,
+) error {
+	s.t.Helper()
+
+	if s.forcedError != nil {
+		return s.forcedError
+	}
+
+	require.Equal(s.t, validRoleBinding.ResourceID, resourceID)
+	require.Equal(s.t, validRoleBinding.ResourceType, resourceType)
+
+	return nil
+}
+
 func (s *testStore) GetRoleBinding(
 	_ context.Context,
 	query permissions.RoleBindingQuery,

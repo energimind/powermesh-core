@@ -207,6 +207,66 @@ func TestPermissionService_DeleteRoleBinding(t *testing.T) {
 	}
 }
 
+func TestPermissionService_DeleteRoleBindingsByResource(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		actor         access.Actor
+		query         permissions.RoleBindingQuery
+		storeError    bool
+		listenerError bool
+		wantEvent     permissions.EventType
+		wantErr       error
+	}{
+		"invalid-query": {
+			actor:   adminActor,
+			query:   permissions.RoleBindingQuery{},
+			wantErr: errorz.ValidationError{},
+		},
+		"store-error": {
+			actor:      adminActor,
+			query:      validRoleBindingQuery,
+			storeError: true,
+			wantErr:    errorz.StoreError{},
+		},
+		"listener-error": {
+			actor:         adminActor,
+			query:         validRoleBindingQuery,
+			listenerError: true,
+			wantErr:       errorz.InternalError{},
+		},
+		"success": {
+			actor:     adminActor,
+			query:     validRoleBindingQuery,
+			wantEvent: permissions.RoleBindingDeleted,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newTestStore(t, test.storeError)
+			tl := newTestListener(test.listenerError)
+
+			svc := NewPermissionService(newTestIDGenerator(), ts, WithListener(tl))
+
+			err := svc.DeleteRoleBindingsByResource(context.Background(), test.actor, test.query.ResourceID, test.query.ResourceType)
+
+			if test.wantErr != nil {
+				require.Error(t, err)
+				require.IsType(t, test.wantErr, err)
+			} else {
+				require.NoError(t, err)
+			}
+
+			if test.wantEvent != "" {
+				requireEventFired(t, test.wantEvent, tl)
+			} else {
+				require.Empty(t, tl.eventFired)
+			}
+		})
+	}
+}
+
 func TestPermissionService_GetRoleBinding(t *testing.T) {
 	t.Parallel()
 
