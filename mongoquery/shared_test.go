@@ -127,6 +127,7 @@ type mockCollection struct {
 	insertOne      func() (*mongo.InsertOneResult, error)
 	updateOne      func() (*mongo.UpdateResult, error)
 	deleteOne      func() (*mongo.DeleteResult, error)
+	deleteMany     func() (*mongo.DeleteResult, error)
 	findOne        func() *mongo.SingleResult
 	find           func() (*mongo.Cursor, error)
 	countDocuments func() (int64, error)
@@ -198,6 +199,22 @@ func (c *mockCollection) DeleteOne(_ context.Context, filter interface{}, _ ...*
 	}
 
 	return c.deleteOne()
+}
+
+func (c *mockCollection) DeleteMany(_ context.Context, filter interface{}, _ ...*options.DeleteOptions) (*mongo.DeleteResult, error) {
+	c.t.Helper()
+
+	require.NotNil(c.t, filter)
+
+	fm := filter.(bson.M)
+
+	require.Equal(c.t, bson.M{"age": bson.M{"$gt": 20}}, fm)
+
+	if c.deleteMany == nil {
+		return nil, errors.New("deleteMany not implemented")
+	}
+
+	return c.deleteMany()
 }
 
 func (c *mockCollection) FindOne(_ context.Context, filter interface{}, _ ...*options.FindOneOptions) *mongo.SingleResult {
