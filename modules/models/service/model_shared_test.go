@@ -12,13 +12,15 @@ import (
 
 var (
 	validModelData = models.ModelData{
-		Code: "code1",
-		Name: "name1",
+		Code:        "code1",
+		Name:        "name1",
+		Description: "description1",
 	}
 	validModel = models.Model{
-		ID:   validModelID,
-		Code: validModelData.Code,
-		Name: validModelData.Name,
+		ID:          validModelID,
+		Code:        validModelData.Code,
+		Name:        validModelData.Name,
+		Description: validModelData.Description,
 	}
 )
 

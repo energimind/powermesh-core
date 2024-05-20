@@ -11,17 +11,19 @@ import (
 
 func testModel() models.Model {
 	return models.Model{
-		ID:   "1",
-		Code: "code1",
-		Name: "model1",
+		ID:          "1",
+		Code:        "code1",
+		Name:        "model1",
+		Description: "description1",
 	}
 }
 
 func testModel2() models.Model {
 	return models.Model{
-		ID:   "2",
-		Code: "code2",
-		Name: "model2",
+		ID:          "2",
+		Code:        "code2",
+		Name:        "model2",
+		Description: "description2",
 	}
 }
 

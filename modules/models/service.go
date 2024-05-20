@@ -17,8 +17,9 @@ type ModelService interface {
 
 // ModelData defines the model data. It is used to create or update a model.
 type ModelData struct {
-	Code string
-	Name string
+	Code        string
+	Name        string
+	Description string
 }
 
 // MeshService defines a mesh service.

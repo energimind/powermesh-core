@@ -2,9 +2,10 @@ package models
 
 // Model defines a model.
 type Model struct {
-	ID   string
-	Code string
-	Name string
+	ID          string
+	Code        string
+	Name        string
+	Description string
 }
 
 // Mesh represents a model mesh.
