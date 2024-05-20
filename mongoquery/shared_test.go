@@ -107,6 +107,10 @@ func fromDBAddresses(as []dbAddress) []address {
 	return ads
 }
 
+func extractAddresses(p dbPerson) []address {
+	return fromDBAddresses(p.Addresses)
+}
+
 func extractFirstAddress(p person) address {
 	return p.Addresses[0]
 }

@@ -31,6 +31,7 @@ type nodeOperations interface {
 	UpdateNode(ctx context.Context, modelID string, node models.Node) error
 	DeleteNode(ctx context.Context, modelID, nodeID string) error
 	GetNode(ctx context.Context, modelID, nodeID string) (models.Node, error)
+	GetNodes(ctx context.Context, modelID string) ([]models.Node, error)
 }
 
 // relationOperations defines the operations on relations.
@@ -39,6 +40,7 @@ type relationOperations interface {
 	UpdateRelation(ctx context.Context, modelID string, relation models.Relation) error
 	DeleteRelation(ctx context.Context, modelID, relationID string) error
 	GetRelation(ctx context.Context, modelID, relationID string) (models.Relation, error)
+	GetRelations(ctx context.Context, modelID string) ([]models.Relation, error)
 }
 
 // meshListener defines the external mesh event modelListener.
@@ -326,6 +328,25 @@ func (s *MeshService) GetNode(
 	return node, nil
 }
 
+// GetNodes implements the models.MeshService interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshService) GetNodes(
+	ctx context.Context,
+	modelID string,
+) ([]models.Node, error) {
+	if err := validateModelID(modelID); err != nil {
+		return nil, err
+	}
+
+	nodes, err := s.store.GetNodes(ctx, modelID)
+	if err != nil {
+		return nil, err
+	}
+
+	return nodes, nil
+}
+
 // CreateRelation implements the models.MeshService interface.
 //
 //nolint:wrapcheck // see comment in the header
@@ -453,6 +474,25 @@ func (s *MeshService) GetRelation(
 	}
 
 	return relation, nil
+}
+
+// GetRelations implements the models.MeshService interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshService) GetRelations(
+	ctx context.Context,
+	modelID string,
+) ([]models.Relation, error) {
+	if err := validateModelID(modelID); err != nil {
+		return nil, err
+	}
+
+	relations, err := s.store.GetRelations(ctx, modelID)
+	if err != nil {
+		return nil, err
+	}
+
+	return relations, nil
 }
 
 // fireMeshEvent fires a mesh event.

@@ -554,6 +554,48 @@ func TestMeshService_GetNode(t *testing.T) {
 	}
 }
 
+func TestMeshService_GetNodes(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		modelID    string
+		storeError bool
+		wantErr    error
+	}{
+		"invalid-modelID": {
+			modelID: "",
+			wantErr: errorz.ValidationError{},
+		},
+		"store-error": {
+			modelID:    validModelID,
+			storeError: true,
+			wantErr:    errorz.StoreError{},
+		},
+		"success": {
+			modelID: validModelID,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newTestMeshStore(t, test.storeError)
+
+			svc := NewMeshService(ts, newTestIDGenerator())
+
+			nodes, err := svc.GetNodes(context.Background(), test.modelID)
+
+			if test.wantErr != nil {
+				require.Error(t, err)
+				require.IsType(t, test.wantErr, err)
+				require.Empty(t, nodes)
+			} else {
+				require.NoError(t, err)
+				require.NotEmpty(t, nodes)
+			}
+		})
+	}
+}
+
 func TestMeshService_CreateRelation(t *testing.T) {
 	t.Parallel()
 
@@ -810,6 +852,48 @@ func TestMeshService_GetRelation(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				require.NotEmpty(t, relation)
+			}
+		})
+	}
+}
+
+func TestMeshService_GetRelations(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		modelID    string
+		storeError bool
+		wantErr    error
+	}{
+		"invalid-modelID": {
+			modelID: "",
+			wantErr: errorz.ValidationError{},
+		},
+		"store-error": {
+			modelID:    validModelID,
+			storeError: true,
+			wantErr:    errorz.StoreError{},
+		},
+		"success": {
+			modelID: validModelID,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newTestMeshStore(t, test.storeError)
+
+			svc := NewMeshService(ts, newTestIDGenerator())
+
+			relations, err := svc.GetRelations(context.Background(), test.modelID)
+
+			if test.wantErr != nil {
+				require.Error(t, err)
+				require.IsType(t, test.wantErr, err)
+				require.Empty(t, relations)
+			} else {
+				require.NoError(t, err)
+				require.NotEmpty(t, relations)
 			}
 		})
 	}

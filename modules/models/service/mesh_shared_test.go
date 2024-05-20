@@ -254,6 +254,21 @@ func (s *testMeshStore) GetNode(
 	return models.Node{}, errorz.NewNotFoundError("node %v not found", nodeID)
 }
 
+func (s *testMeshStore) GetNodes(
+	_ context.Context,
+	modelID string,
+) ([]models.Node, error) {
+	s.t.Helper()
+
+	if s.forcedError != nil {
+		return nil, s.forcedError
+	}
+
+	require.NotEmpty(s.t, modelID)
+
+	return []models.Node{{ID: validNodeID}}, nil
+}
+
 func (s *testMeshStore) CreateRelation(
 	_ context.Context,
 	modelID string,
@@ -322,4 +337,19 @@ func (s *testMeshStore) GetRelation(
 	}
 
 	return models.Relation{}, errorz.NewNotFoundError("relation %v not found", relationID)
+}
+
+func (s *testMeshStore) GetRelations(
+	_ context.Context,
+	modelID string,
+) ([]models.Relation, error) {
+	s.t.Helper()
+
+	if s.forcedError != nil {
+		return nil, s.forcedError
+	}
+
+	require.NotEmpty(s.t, modelID)
+
+	return []models.Relation{{ID: validRelationID}}, nil
 }

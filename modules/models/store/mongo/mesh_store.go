@@ -107,6 +107,15 @@ func (s *MeshStore) GetNode(ctx context.Context, modelID, nodeID string) (models
 		Exec(ctx, modelID, nodeID)
 }
 
+// GetNodes implements the mesh store interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshStore) GetNodes(ctx context.Context, modelID string) ([]models.Node, error) {
+	return q.EmbeddedFindMany(s.meshes, fieldNodes, extractNodes).
+		Key(meshKey).
+		Exec(ctx, modelID)
+}
+
 // CreateRelation implements the mesh store interface.
 //
 //nolint:wrapcheck // see comment in the header
@@ -141,4 +150,13 @@ func (s *MeshStore) GetRelation(ctx context.Context, modelID, relationID string)
 	return q.EmbeddedGetOne(s.meshes, fieldRelations, fieldID, extractFirstRelation).
 		Key(meshKey).
 		Exec(ctx, modelID, relationID)
+}
+
+// GetRelations implements the mesh store interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *MeshStore) GetRelations(ctx context.Context, modelID string) ([]models.Relation, error) {
+	return q.EmbeddedFindMany(s.meshes, fieldRelations, extractRelations).
+		Key(meshKey).
+		Exec(ctx, modelID)
 }

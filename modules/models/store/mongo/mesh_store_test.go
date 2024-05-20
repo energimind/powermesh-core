@@ -259,6 +259,31 @@ func TestMeshStore_GetNode(t *testing.T) {
 	})
 }
 
+func TestMeshStore_GetNodes(t *testing.T) {
+	t.Parallel()
+
+	t.Run("not-found", func(t *testing.T) {
+		withMeshStore(t, func(t *testing.T, ctx context.Context, store *mongo.MeshStore) {
+			_, err := store.GetNodes(ctx, "missing")
+
+			require.IsType(t, errorz.NotFoundError{}, err)
+		})
+	})
+
+	t.Run("success", func(t *testing.T) {
+		withMeshStore(t, func(t *testing.T, ctx context.Context, store *mongo.MeshStore) {
+			mesh := testMesh()
+
+			require.NoError(t, store.CreateMesh(ctx, mesh))
+
+			nodes, err := store.GetNodes(ctx, mesh.ModelID)
+
+			require.NoError(t, err)
+			require.Len(t, nodes, len(mesh.Nodes))
+		})
+	})
+}
+
 func TestMeshStore_CreateRelation(t *testing.T) {
 	t.Parallel()
 
@@ -387,6 +412,31 @@ func TestMeshStore_GetRelation(t *testing.T) {
 
 			require.NoError(t, err)
 			require.Equal(t, relation, foundRelation)
+		})
+	})
+}
+
+func TestMeshStore_GetRelations(t *testing.T) {
+	t.Parallel()
+
+	t.Run("not-found", func(t *testing.T) {
+		withMeshStore(t, func(t *testing.T, ctx context.Context, store *mongo.MeshStore) {
+			_, err := store.GetRelations(ctx, "missing")
+
+			require.IsType(t, errorz.NotFoundError{}, err)
+		})
+	})
+
+	t.Run("success", func(t *testing.T) {
+		withMeshStore(t, func(t *testing.T, ctx context.Context, store *mongo.MeshStore) {
+			mesh := testMesh()
+
+			require.NoError(t, store.CreateMesh(ctx, mesh))
+
+			relations, err := store.GetRelations(ctx, mesh.ModelID)
+
+			require.NoError(t, err)
+			require.Len(t, relations, len(mesh.Relations))
 		})
 	})
 }

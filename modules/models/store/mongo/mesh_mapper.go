@@ -106,8 +106,28 @@ func fromStoreRelation(r storeRelation) models.Relation {
 	}
 }
 
+func extractNodes(m storeMesh) []models.Node {
+	nodes := make([]models.Node, len(m.Nodes))
+
+	for i, n := range m.Nodes {
+		nodes[i] = fromStoreNode(n)
+	}
+
+	return nodes
+}
+
 func extractFirstNode(m storeMesh) models.Node {
 	return fromStoreNode(m.Nodes[0])
+}
+
+func extractRelations(m storeMesh) []models.Relation {
+	relations := make([]models.Relation, len(m.Relations))
+
+	for i, r := range m.Relations {
+		relations[i] = fromStoreRelation(r)
+	}
+
+	return relations
 }
 
 func extractFirstRelation(m storeMesh) models.Relation {
