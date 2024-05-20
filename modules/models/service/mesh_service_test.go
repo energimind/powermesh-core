@@ -913,3 +913,19 @@ func TestMeshService_fireMeshEvent_noListener(t *testing.T) {
 		)
 	})
 }
+
+func TestMeshService_fireMeshContentsEvent_noListener(t *testing.T) {
+	t.Parallel()
+
+	svc := NewMeshService(nil, nil)
+
+	require.NotPanics(t, func() {
+		_ = svc.fireMeshContentsEvent(
+			context.Background(),
+			adminActor,
+			models.MeshContentsCreated,
+			models.Mesh{},
+			models.Mesh{},
+		)
+	})
+}

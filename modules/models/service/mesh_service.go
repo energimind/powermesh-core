@@ -529,6 +529,10 @@ func (s *MeshService) fireMeshContentsEvent(
 	eventType models.EventType,
 	updates, deletes models.Mesh,
 ) error {
+	if s.listener == nil {
+		return nil
+	}
+
 	event := models.MeshEvent{
 		EventHeader: models.EventHeader{
 			Type:      eventType,
