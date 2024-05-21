@@ -55,12 +55,7 @@ func (q EmbeddedUpdateQuery[D, T]) Exec(ctx context.Context, id, subDocID any, f
 	}
 
 	if res.MatchedCount == 0 {
-		return errorz.NewNotFoundError("%s %v not found", singular(q.coll.Name()), id)
-	}
-
-	if res.ModifiedCount == 0 {
-		return errorz.NewNotFoundError("field %s[%s] not found in %s %v",
-			q.field, subDocID, singular(q.coll.Name()), id)
+		return errorz.NewNotFoundError("%s[%s] %v[%v] not found", singular(q.coll.Name()), q.field, id, subDocID)
 	}
 
 	return nil

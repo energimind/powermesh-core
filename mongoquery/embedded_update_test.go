@@ -27,7 +27,7 @@ func Test_EmbeddedUpdate(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("person-not-found", func(t *testing.T) {
+	t.Run("not-found", func(t *testing.T) {
 		coll := &mockCollection{
 			t:      t,
 			caller: "EmbeddedUpdate",
@@ -40,23 +40,6 @@ func Test_EmbeddedUpdate(t *testing.T) {
 			Exec(context.Background(), testID, testAddressID, testDomainAddress)
 
 		require.IsType(t, errorz.NotFoundError{}, err)
-		require.ErrorContains(t, err, "person 1 not found")
-	})
-
-	t.Run("embedded-not-found", func(t *testing.T) {
-		coll := &mockCollection{
-			t:      t,
-			caller: "EmbeddedUpdate",
-			updateOne: func() (*mongo.UpdateResult, error) {
-				return &mongo.UpdateResult{MatchedCount: 1, ModifiedCount: 0}, nil
-			},
-		}
-
-		err := EmbeddedUpdate(coll, "address", "id", toDBAddress).
-			Exec(context.Background(), testID, testAddressID, testDomainAddress)
-
-		require.IsType(t, errorz.NotFoundError{}, err)
-		require.ErrorContains(t, err, "field address[2] not found in person 1")
 	})
 
 	t.Run("update-error", func(t *testing.T) {
