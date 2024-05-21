@@ -5,7 +5,9 @@ import (
 	"errors"
 
 	"github.com/energimind/powermesh-core/errorz"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // EmbeddedGetOne creates a new EmbeddedGetOneQuery.
@@ -40,12 +42,15 @@ func (q EmbeddedGetOneQuery[D, T]) Key(key string) EmbeddedGetOneQuery[D, T] {
 // It returns an error if the operation failed.
 func (q EmbeddedGetOneQuery[D, T]) Exec(ctx context.Context, id, subDocID any) (T, error) { //nolint:ireturn
 	qFilter := buildFilter(q.key, id)
+	qProjection := bson.M{q.field + ".$": 1} // return the matched sub-document only
 
 	qFilter[q.field+"."+q.subDocKey] = subDocID
 
+	opts := options.FindOne().SetProjection(qProjection)
+
 	var qValue D
 
-	if err := q.coll.FindOne(ctx, qFilter).Decode(&qValue); err != nil {
+	if err := q.coll.FindOne(ctx, qFilter, opts).Decode(&qValue); err != nil {
 		var zero T
 
 		if errors.Is(err, mongo.ErrNoDocuments) {
