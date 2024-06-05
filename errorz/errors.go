@@ -150,6 +150,35 @@ func IsValidationError(err error) bool {
 	return errors.As(err, &validationError)
 }
 
+// ConflictError is the error returned when an object already exists.
+type ConflictError struct {
+	Message string
+}
+
+// NewConflictError returns a new ConflictError.
+func NewConflictError(format string, args ...any) ConflictError {
+	return ConflictError{
+		Message: fmt.Sprintf(format, args...),
+	}
+}
+
+// isDomainError implements the domainError interface.
+func (ConflictError) isDomainError() {
+	// tagging interface
+}
+
+// Error returns the error message.
+func (e ConflictError) Error() string {
+	return e.Message
+}
+
+// IsConflictError returns true if the error is a ConflictError.
+func IsConflictError(err error) bool {
+	var duplicateError ConflictError
+
+	return errors.As(err, &duplicateError)
+}
+
 // StoreError is the error returned when an error occurs while storing an object.
 type StoreError struct {
 	Message string
