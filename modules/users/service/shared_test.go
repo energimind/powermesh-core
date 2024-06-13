@@ -17,15 +17,17 @@ var (
 	adminActor    = access.Actor{Role: access.RoleAdmin}
 	validUserID   = "1" // must match generated ID from testIDGenerator
 	validUserData = users.UserData{
-		ExternalID: "ex1",
-		Username:   "user1",
-		Email:      "user1@somewhere.com",
+		ExternalID:  "ex1",
+		Username:    "user1",
+		DisplayName: "User 1",
+		Email:       "user1@somewhere.com",
 	}
 	validUser = users.User{
-		ID:         validUserID,
-		ExternalID: validUserData.ExternalID,
-		Username:   validUserData.Username,
-		Email:      validUserData.Email,
+		ID:          validUserID,
+		ExternalID:  validUserData.ExternalID,
+		Username:    validUserData.Username,
+		DisplayName: validUserData.DisplayName,
+		Email:       validUserData.Email,
 	}
 )
 

@@ -19,7 +19,8 @@ type UserService interface {
 
 // UserData defines the user data. It is used to create or update a user.
 type UserData struct {
-	ExternalID string
-	Username   string
-	Email      string
+	ExternalID  string
+	Username    string
+	DisplayName string
+	Email       string
 }
