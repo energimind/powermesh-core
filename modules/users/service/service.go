@@ -21,6 +21,7 @@ type store interface {
 	DeleteUser(ctx context.Context, id string) error
 	GetUser(ctx context.Context, id string) (users.User, error)
 	GetUsersByIDs(ctx context.Context, ids []string) ([]users.User, error)
+	GetUserByExternalID(ctx context.Context, externalID string) (users.User, error)
 	GetUserByUsername(ctx context.Context, username string) (users.User, error)
 }
 
@@ -180,6 +181,25 @@ func (s *UserService) GetUsersByIDs(
 	}
 
 	return found, nil
+}
+
+// GetUserByExternalID implements the users.UserService interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *UserService) GetUserByExternalID(
+	ctx context.Context,
+	externalID string,
+) (users.User, error) {
+	if err := validateExternalID(externalID); err != nil {
+		return users.User{}, err
+	}
+
+	user, err := s.store.GetUserByExternalID(ctx, externalID)
+	if err != nil {
+		return users.User{}, err
+	}
+
+	return user, nil
 }
 
 // GetUserByUsername implements the users.UserService interface.

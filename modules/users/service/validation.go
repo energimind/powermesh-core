@@ -19,6 +19,10 @@ func validateID(id string) error {
 	return requireString(id, "id")
 }
 
+func validateExternalID(externalID string) error {
+	return requireString(externalID, "externalID")
+}
+
 func validateUsername(username string) error {
 	return requireString(username, "username")
 }

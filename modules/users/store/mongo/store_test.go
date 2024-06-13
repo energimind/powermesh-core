@@ -120,6 +120,29 @@ func TestUserStore_GetUsersByIDs(t *testing.T) {
 	})
 }
 
+func TestUserStore_GetUserByExternalID(t *testing.T) {
+	t.Parallel()
+
+	withStore(t, func(t *testing.T, ctx context.Context, store *mongo.UserStore) {
+		t.Run("not-found", func(t *testing.T) {
+			_, err := store.GetUserByExternalID(ctx, "missing")
+
+			require.IsType(t, errorz.NotFoundError{}, err)
+		})
+
+		t.Run("success", func(t *testing.T) {
+			user := testUser()
+
+			require.NoError(t, store.CreateUser(ctx, user))
+
+			createdUser, err := store.GetUserByExternalID(ctx, user.ExternalID)
+
+			require.NoError(t, err)
+			require.Equal(t, user, createdUser)
+		})
+	})
+}
+
 func TestUserStore_GetUserByUsername(t *testing.T) {
 	t.Parallel()
 

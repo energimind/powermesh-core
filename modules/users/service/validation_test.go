@@ -23,6 +23,13 @@ func Test_validateID(t *testing.T) {
 	require.Error(t, validateID(""))
 }
 
+func Test_validateExternalID(t *testing.T) {
+	t.Parallel()
+
+	require.NoError(t, validateExternalID("1"))
+	require.Error(t, validateExternalID(""))
+}
+
 func Test_validateUsername(t *testing.T) {
 	t.Parallel()
 

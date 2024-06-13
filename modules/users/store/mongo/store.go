@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	collUsers     = "users"
-	fieldID       = "id"
-	fieldUsername = "username"
+	collUsers       = "users"
+	fieldID         = "id"
+	fieldExternalID = "externalId"
+	fieldUsername   = "username"
 )
 
 // UserStore is a MongoDB implementation of the users store.
@@ -62,6 +63,13 @@ func (s *UserStore) GetUser(ctx context.Context, id string) (users.User, error) 
 //nolint:wrapcheck // see comment in the header
 func (s *UserStore) GetUsersByIDs(ctx context.Context, ids []string) ([]users.User, error) {
 	return q.FindMany(s.users, fromStoreUser).Exec(ctx, q.Filter{}.IN(fieldID, ids))
+}
+
+// GetUserByExternalID implements the users store interface.
+//
+//nolint:wrapcheck // see comment in the header
+func (s *UserStore) GetUserByExternalID(ctx context.Context, externalID string) (users.User, error) {
+	return q.GetOne(s.users, fromStoreUser).Exec(ctx, q.Filter{}.EQ(fieldExternalID, externalID))
 }
 
 // GetUserByUsername implements the users store interface.

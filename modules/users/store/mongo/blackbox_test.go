@@ -27,17 +27,19 @@ func TestMain(m *testing.M) {
 
 func testUser() users.User {
 	return users.User{
-		ID:       "1",
-		Username: "username1",
-		Email:    "user1@somewhere.com",
+		ID:         "1",
+		ExternalID: "ex1",
+		Username:   "username1",
+		Email:      "user1@somewhere.com",
 	}
 }
 
 func testUser2() users.User {
 	return users.User{
-		ID:       "2",
-		Username: "username2",
-		Email:    "user2@somewhere.com",
+		ID:         "2",
+		ExternalID: "ex2",
+		Username:   "username2",
+		Email:      "user2@somewhere.com",
 	}
 }
 

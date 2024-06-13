@@ -17,13 +17,15 @@ var (
 	adminActor    = access.Actor{Role: access.RoleAdmin}
 	validUserID   = "1" // must match generated ID from testIDGenerator
 	validUserData = users.UserData{
-		Username: "user1",
-		Email:    "user1@somewhere.com",
+		ExternalID: "ex1",
+		Username:   "user1",
+		Email:      "user1@somewhere.com",
 	}
 	validUser = users.User{
-		ID:       validUserID,
-		Username: validUserData.Username,
-		Email:    validUserData.Email,
+		ID:         validUserID,
+		ExternalID: validUserData.ExternalID,
+		Username:   validUserData.Username,
+		Email:      validUserData.Email,
 	}
 )
 
@@ -176,6 +178,21 @@ func (s *testStore) GetUsersByIDs(
 	}
 
 	return found, nil
+}
+
+func (s *testStore) GetUserByExternalID(
+	_ context.Context,
+	externalID string,
+) (users.User, error) {
+	s.t.Helper()
+
+	if s.forcedError != nil {
+		return users.User{}, s.forcedError
+	}
+
+	require.NotEmpty(s.t, externalID)
+
+	return users.User{ID: validUserID, ExternalID: externalID}, nil
 }
 
 func (s *testStore) GetUserByUsername(

@@ -297,6 +297,48 @@ func TestUserService_GetUsersByIDs(t *testing.T) {
 	}
 }
 
+func TestUserService_GetUserByExternalID(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]struct {
+		externalID string
+		storeError bool
+		wantErr    error
+	}{
+		"invalid-externalID": {
+			externalID: "",
+			wantErr:    errorz.ValidationError{},
+		},
+		"store-error": {
+			externalID: "external1",
+			storeError: true,
+			wantErr:    errorz.StoreError{},
+		},
+		"success": {
+			externalID: "external1",
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			ts := newTestStore(t, test.storeError)
+			svc := NewUserService(ts, newTestIDGenerator(), WithListener(newTestListener(false)))
+
+			user, err := svc.GetUserByExternalID(context.Background(), test.externalID)
+
+			if test.wantErr != nil {
+				require.Error(t, err)
+				require.IsType(t, test.wantErr, err)
+				require.Empty(t, user)
+			} else {
+				require.NoError(t, err)
+				require.NotEmpty(t, user)
+				require.NotEmpty(t, user.ID)
+			}
+		})
+	}
+}
+
 func TestUserService_GetUserByUsername(t *testing.T) {
 	t.Parallel()
 

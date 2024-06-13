@@ -13,11 +13,13 @@ type UserService interface {
 	DeleteUser(ctx context.Context, actor access.Actor, id string) error
 	GetUser(ctx context.Context, id string) (User, error)
 	GetUsersByIDs(ctx context.Context, ids []string) ([]User, error)
+	GetUserByExternalID(ctx context.Context, externalID string) (User, error)
 	GetUserByUsername(ctx context.Context, username string) (User, error)
 }
 
 // UserData defines the user data. It is used to create or update a user.
 type UserData struct {
-	Username string
-	Email    string
+	ExternalID string
+	Username   string
+	Email      string
 }
