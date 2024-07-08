@@ -1,6 +1,6 @@
 module github.com/energimind/powermesh-core
 
-go 1.22
+go 1.22.5
 
 require (
 	github.com/energimind/go-kit v0.7.0
