@@ -4,7 +4,7 @@ go 1.22.5
 
 require (
 	github.com/energimind/go-kit v0.7.1-0.20240809193804-ad5a847c2c0c
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	go.mongodb.org/mongo-driver v1.17.1
 )
 
